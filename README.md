@@ -17,13 +17,15 @@ A project by Olle Karlson Reutercrona, Anton Eriksson and Daniel Rosén to furth
 ### :pencil2: **Planned features:**
 
 * ECS
-- Animation System
-
 - Editor
 
 - DX11 Renderer
   
   - Directional / Spot / Point lights
+  
+  - 3D Models
+  
+  - Animation System
   
   - Instantiated Models
   
