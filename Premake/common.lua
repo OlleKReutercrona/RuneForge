@@ -66,16 +66,6 @@ directories = {
     premake         = basePath .. "Premake",
  }
 
---  local function PrintDirectories()
---     for _, dir in pairs(directories) do
---         print(dir)
---     end
--- end
--- PrintDirectories();
-
- -- COMMON FUNCTIONS --
--- Thanks to Assar Bergh for the following functions
-
 function MakeFolderStructure()
     for _, dir in pairs(directories) do
         if not os.isdir(dir) then
