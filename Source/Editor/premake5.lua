@@ -12,7 +12,7 @@ project(EDITOR_NAME)
     kind("StaticLib")
 
     pchheader("stdafx.h")
-    pchsource("stdafx.cpp")
+    pchsource("pch/stdafx.cpp")
 
     shaderincludedirs(directories.coreShaders)
 

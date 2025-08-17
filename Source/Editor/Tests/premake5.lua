@@ -25,6 +25,8 @@ project(NAME)
         directories.externalInclude,
         directories.core,
 
+        directories.gtest,
+
         directories.editor,
         directories.editorTest,
     }
