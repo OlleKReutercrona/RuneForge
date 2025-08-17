@@ -28,6 +28,7 @@ RELEASE_DEFINES = {
 local basePath = os.realpath("..\\")
 local sourcePath = basePath.."Source\\"
 
+-- set from root
 directories = {
     root            = basePath,
     bin             = basePath .. "Bin\\",
@@ -35,6 +36,8 @@ directories = {
     shaders         = basePath .. "Bin\\Shaders\\",
 
     intermediateLib = basePath .. "Temp\\IntermediateLib",
+
+    source          = sourcePath,
 
     -- Project, maybe remove if editor can create new projects
     project         = sourcePath .. "Project\\",
@@ -67,6 +70,7 @@ directories = {
 
     premake         = basePath .. "Premake",
  }
+
 
 function MakeFolderStructure()
     for _, dir in pairs(directories) do
