@@ -39,7 +39,7 @@ project(EXTERNAL_NAME)
         kind "StaticLib"
         staticruntime "off"
         symbols "On"
-        systemversion "Latest"
+        systemversion "latest"
 
         flags {
             "MultiProcessorCompile",

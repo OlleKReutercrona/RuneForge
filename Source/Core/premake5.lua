@@ -12,8 +12,8 @@ project(CORE_NAME)
     targetname(CORE_NAME.."_%{cfg.buildcfg}")
     objdir(directories.temp.."/"..CORE_NAME.."/%{cfg.buildcfg}")
 
-    pchheader(directories.corePch.."stdafx.h")
-    pchsource(directories.corePch.."stdafx.cpp")
+    pchheader("stdafx.h")
+    pchsource("pch/stdafx.cpp")
 
     files {
         directories.core.."**.h",
@@ -27,7 +27,9 @@ project(CORE_NAME)
 
     includedirs {
         directories.externalInclude,
-        directories.coreSource,
+        directories.core,
+
+        directories.corePch,
     }
 
     filter(CONFIG_FILTERS.DEBUG)

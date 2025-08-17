@@ -1,10 +1,10 @@
 -- COMMON VARIABLES --
 WORKSPACE_NAME = "RuneForge"
 
+PROJECT_NAME = "RuneForge"
 CORE_NAME = WORKSPACE_NAME .. " Core"
 EDITOR_NAME = WORKSPACE_NAME .. " Editor"
 EXTERNAL_NAME = "External"
-PROJECT_NAME = "RuneForge"
 
 cppVersion = "C++20"
 
@@ -25,43 +25,43 @@ RELEASE_DEFINES = {
 }
 -- DIRECTORIES --
 
-local basePath = os.realpath("../")
-local sourcePath = basePath.."Source/"
+local basePath = os.realpath("..\\")
+local sourcePath = basePath.."Source\\"
 
 directories = {
     root            = basePath,
-    bin             = basePath .. "Bin/",
-    temp            = basePath .. "Temp/",
-    shaders         = basePath .. "Bin/Shaders/",
+    bin             = basePath .. "Bin\\",
+    temp            = basePath .. "Temp\\",
+    shaders         = basePath .. "Bin\\Shaders\\",
 
-    intermediateLib = basePath .. "Temp/IntermediateLib",
+    intermediateLib = basePath .. "Temp\\IntermediateLib",
 
     -- Project, maybe remove if editor can create new projects
-    project         = sourcePath .. "Project/",
-    projectPch      = sourcePath .. "Project/Pch",
+    project         = sourcePath .. "Project\\",
+    projectPch      = sourcePath .. "Project\\pch\\",
 
     -- Core
-    core            = sourcePath .. "Core/",
-    coreGraphics    = sourcePath .. "Core/Graphics/",
-    coreShaders     = sourcePath .. "Core/Graphics/Shaders/",
-    coreEngine      = sourcePath .. "Core/Engine/",
-    corePch         = sourcePath .. "Core/Pch/",
+    core            = sourcePath .. "Core\\",
+    coreGraphics    = sourcePath .. "Core\\Graphics\\",
+    coreShaders     = sourcePath .. "Core\\Graphics\\Shaders\\",
+    coreEngine      = sourcePath .. "Core\\Engine\\",
+    corePch         = sourcePath .. "Core\\pch\\",
 
-    coreTest        = sourcePath .. "Core/Tests/",
+    coreTest        = sourcePath .. "Core\\Tests\\",
 
     -- Editor
-    editor          = sourcePath .. "Editor/",
-    editorPch       = sourcePath .. "Editor/Pch/",
+    editor          = sourcePath .. "Editor\\",
+    editorPch       = sourcePath .. "Editor\\pch\\",
 
-    editorTest      = sourcePath .. "Editor/Tests/",
+    editorTest      = sourcePath .. "Editor\\Tests\\",
 
     -- External
-    external        = sourcePath .. "External/",
-    externalDLL     = sourcePath .. "External/dll/",
-    externalInclude = sourcePath .. "External/Include/",
-    externalLib     = sourcePath .. "External/Lib/",
-    debugLib        = sourcePath .. "External/Lib/Debug/",
-    releaseLib      = sourcePath .. "External/Lib/Release/",
+    external        = sourcePath .. "External\\",
+    externalDLL     = sourcePath .. "External\\dll\\",
+    externalInclude = sourcePath .. "External\\Include\\",
+    externalLib     = sourcePath .. "External\\Lib\\",
+    debugLib        = sourcePath .. "External\\Lib\\Debug\\",
+    releaseLib      = sourcePath .. "External\\Lib\\Release\\",
 
     premake         = basePath .. "Premake",
  }

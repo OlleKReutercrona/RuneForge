@@ -11,8 +11,8 @@ project(EDITOR_NAME)
 
     kind("StaticLib")
 
-    pchheader (directories.editorPch.."stdafx.h")
-    pchsource (directories.editorPch.."stdafx.cpp")
+    pchheader("stdafx.h")
+    pchsource("stdafx.cpp")
 
     shaderincludedirs(directories.coreShaders)
 
@@ -34,6 +34,9 @@ project(EDITOR_NAME)
     includedirs {
         directories.externalInclude,
         directories.core,
+
+        directories.editor,
+        directories.editorPch,
     }
 
     libdirs {

@@ -1,37 +1,32 @@
-include "../../Premake/common.lua"
-print("Setting up Project")
+include "../../../Premake/common.lua"
+print("Setting up Editor Tests")
 
-project(PROJECT_NAME)
+local NAME = EDITOR_NAME.." Tests"
+
+project(NAME)
     location(directories.temp)
     language("C++")
     cppdialect(cppVersion)
-    kind("WindowedApp")
+    kind("StaticLib")
 
     dependson{ CORE_NAME, EXTERNAL_NAME }
 
-    links(LIBRARY_LIST)
-
     debugdir(directories.bin)
     targetdir(directories.bin)
-    targetname(PROJECT_NAME.."_%{cfg.buildcfg}")
-    objdir(directories.temp.."/"..PROJECT_NAME.."/%{cfg.buildcfg}")
-
-    pchheader("stdafx.h")
-    pchsource("pch/stdafx.cpp")
+    targetname(NAME.."_%{cfg.buildcfg}")
+    objdir(directories.temp.."/"..NAME.."/%{cfg.buildcfg}")
 
     files {
-        directories.project.."**.h",
-        directories.project.."**.cpp",
-
-        directories.projectPch.."**"
+        directories.editorTest.."**.h",
+        directories.editorTest.."**.cpp",
     }
 
     includedirs {
         directories.externalInclude,
         directories.core,
 
-        directories.project,
-        directories.projectPch,
+        directories.editor,
+        directories.editorTest,
     }
 
     libdirs {
