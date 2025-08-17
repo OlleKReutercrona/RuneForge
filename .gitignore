@@ -39,3 +39,16 @@
 
 # debug information files
 *.dwo
+
+
+/.vs
+**/.vs
+
+/Temp
+/Bin
+
+*.pdb
+*.vcxproj
+*.vcxproj.user
+*.sln
+*.cso
