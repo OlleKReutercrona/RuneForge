@@ -63,6 +63,8 @@ directories = {
     debugLib        = sourcePath .. "External\\Lib\\Debug\\",
     releaseLib      = sourcePath .. "External\\Lib\\Release\\",
 
+    gtest           = sourcePath .. "External\\Include\\gtest\\googletest\\include\\",
+
     premake         = basePath .. "Premake",
  }
 

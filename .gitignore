@@ -52,3 +52,6 @@
 *.vcxproj.user
 *.sln
 *.cso
+
+# external
+**/gtest

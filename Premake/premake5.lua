@@ -21,12 +21,23 @@ include(directories.external)
 include(directories.editor)
 include(directories.core)
 
+-- a little bit janky but gets to job done
+local includeTests = false
+
+-- loops through the arguments and checks for matches
 for i, arg in ipairs(_ARGS) do
     if(arg == "tests") then
-        print("\nIncluding tests\n")
-        include(directories.editorTest)
-        include(directories.coreTest)
+        includeTests = true
     end
+end
+
+
+if(includeTests) then
+    FetchGoogleTest()
+    
+    print("\nIncluding tests\n")
+    include(directories.editorTest)
+    include(directories.coreTest)
 end
 
 include(directories.project)
