@@ -1,5 +1,6 @@
 print("Starting premake process")
 include "common.lua"
+include "external_dependencies.lua"
 
 workspace(WORKSPACE_NAME)
     location(directories.root)
