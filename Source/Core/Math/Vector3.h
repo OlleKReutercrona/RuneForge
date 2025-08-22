@@ -90,7 +90,7 @@ struct Vector3 {
 		result *= s;
 		return result;
 	}
-
+	
 	float LengthSquared() const noexcept {
 		return (x * x + y * y + z * z);
 	}
@@ -100,27 +100,27 @@ struct Vector3 {
 	float Dot(const Vector3 &other) const noexcept {
 		return (x * other.x) + (y * other.y) + (z * other.z);
 	}
-	Vector3 Normalized() const noexcept {
+	_NODISCARD Vector3 Normalized() const noexcept {
 		float lengthSquared = LengthSquared();
 		if (lengthSquared <= 1e-8f) { return Vector3::ZERO; }
 
 		return (*this) * (1.0f / sqrt(lengthSquared));
 	}
-	Vector3 Cross(const Vector3 &other) const noexcept {
+	_NODISCARD Vector3 Cross(const Vector3 &other) const noexcept {
 		return Vector3(
 			(y * other.z) - (z * other.y),
 			(z * other.x) - (x * other.z),
 			(x * other.y) - (y * other.x)
 		);
 	}
-	Vector3 Reflect(const Vector3 &normal) const noexcept {
+	_NODISCARD Vector3 Reflect(const Vector3 &normal) const noexcept {
 
 		ASSERT_MSG(fabsf(normal.LengthSquared() - 1.0f) > 1e-3f, "Vector3::Reflect recieved non-normalized normal");
 
 		Vector3 normalized = normal.Normalized();
 		return 2.0f * normalized * this->Dot(normalized) - *this;
 	}
-	Vector3 Rotate(float yaw, float pitch) const noexcept {
+	_NODISCARD Vector3 Rotate(float yaw, float pitch) const noexcept {
 		float cosy = cosf(yaw);
 		float siny = sinf(yaw);
 		float cosp = cosf(pitch);
@@ -134,9 +134,9 @@ struct Vector3 {
 		return Vector3(nx, ny, nz);
 	}
 
-	V2 xy() const noexcept { return V2(x, y); }
-	V2 xz() const noexcept { return V2(x, z); }
-	V2 yz() const noexcept { return V2(y, z); }
+	_NODISCARD V2 xy() const noexcept { return V2(x, y); }
+	_NODISCARD V2 xz() const noexcept { return V2(x, z); }
+	_NODISCARD V2 yz() const noexcept { return V2(y, z); }
 };
 
 inline const Vector3 Vector3::ZERO(0, 0, 0);

@@ -92,13 +92,13 @@ struct Vector2 {
 	float Dot(const Vector2 &other) const noexcept {
 		return (x * other.x) + (y * other.y);
 	}
-	Vector2 Normalized() const noexcept {
+	_NODISCARD Vector2 Normalized() const noexcept {
 		float lsq = LengthSquared();
 		if (lsq <= 1e-8f) { return Vector2::ZERO; }
 
 		return (*this) * (1.0f / sqrt(lsq));
 	}
-	Vector2 Reflect(const Vector2 &normal) const noexcept {
+	_NODISCARD Vector2 Reflect(const Vector2 &normal) const noexcept {
 		ASSERT_MSG(fabsf(normal.LengthSquared() - 1.0f) > 1e-3f, "Vector2::Reflect recieved non-normalized normal");
 		return 2.0f * normal * this->Dot(normal) - *this;
 	}
