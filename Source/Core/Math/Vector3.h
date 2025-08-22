@@ -3,7 +3,7 @@
 #include <cmath>
 #include "Vector2.h"
 
-#include "../DebugHelpers.h" // FIXME : need to update premake to get rid of ../
+#include "../Debug/DebugHelpers.h" // FIXME : need to update premake to get rid of ../
 
 struct Vector3 {
 	float x, y, z;

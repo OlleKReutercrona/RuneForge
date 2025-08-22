@@ -2,7 +2,7 @@
 #include <DirectXMath.h>
 #include <cmath>
 
-#include "../DebugHelpers.h" // FIXME : need to update premake to get rid of ../
+#include "../Debug/DebugHelpers.h" // FIXME : need to update premake to get rid of ../
 
 struct Vector2 {
 	float x, y;
