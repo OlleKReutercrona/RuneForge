@@ -3,12 +3,7 @@
 
 #ifdef _DEBUG
 
-#define ASSERT_MSG(cond, msg) \
-    do { \
-        if (!(cond)) { \
-            assert(!("ERROR: " msg )); \
-        } \
-    } while(0)
+#define ASSERT_MSG(cond, msg) if (!(cond)) {  assert(!("ERROR: " msg ));  } \
 
 
 #else // NOTE: Remember to define Macro's inside #else also.
