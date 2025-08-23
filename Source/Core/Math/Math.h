@@ -5,7 +5,7 @@
 #define PI 3.14159265358979323846f
 #endif
 
-namespace rfmath {
+namespace math {
 
     static inline constexpr float TWO_PI = 2.0f * PI;
     static inline constexpr float HALF_PI = 0.5f * PI;
