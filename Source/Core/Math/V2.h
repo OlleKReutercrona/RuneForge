@@ -15,8 +15,8 @@ struct V2 {
 
 	constexpr V2() noexcept : x(0), y(0) {}
 	constexpr V2(float X, float Y) noexcept : x(X), y(Y) {}
-	explicit V2(const DirectX::XMFLOAT2 &f) noexcept : x(f.x), y(f.y) {}
-	explicit V2(DirectX::FXMVECTOR v) noexcept { *this = v; }
+	explicit V2(const DirectX::XMFLOAT2 &xmf2) noexcept : x(xmf2.x), y(xmf2.y) {}
+	explicit V2(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
 
 	operator DirectX::XMFLOAT2() const noexcept {
 		return { x, y };
@@ -24,16 +24,16 @@ struct V2 {
 	operator DirectX::XMVECTOR() const noexcept {
 		return DirectX::XMVectorSet(x, y, 0.0f, 0.0f);
 	}
-	V2 &operator=(const DirectX::XMFLOAT2 &f) noexcept {
-		x = f.x;
-		y = f.y;
+	V2 &operator=(const DirectX::XMFLOAT2 &xmf2) noexcept {
+		x = xmf2.x;
+		y = xmf2.y;
 		return *this;
-	}
-	V2 &operator=(DirectX::FXMVECTOR v) noexcept {
-		DirectX::XMFLOAT2 f;
-		DirectX::XMStoreFloat2(&f, v);
-		x = f.x;
-		y = f.y;
+	} 
+	V2 &operator=(DirectX::FXMVECTOR fxm) noexcept {
+		DirectX::XMFLOAT2 xmFloat2;
+		DirectX::XMStoreFloat2(&xmFloat2, fxm);
+		x = xmFloat2.x;
+		y = xmFloat2.y;
 		return *this;
 	}
 	constexpr V2 operator-() const noexcept {

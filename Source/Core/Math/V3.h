@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector2.h"
+#include "V2.h"
 #include "Debug/DebugHelpers.h"
 
 #include <DirectXMath.h>
@@ -17,8 +17,8 @@ struct V3 {
 
 	constexpr V3() noexcept : x(0), y(0), z(0) {}
 	constexpr V3(float X, float Y, float Z) noexcept : x(X), y(Y), z(Z) {}
-	explicit V3(const DirectX::XMFLOAT3 &f) noexcept : x(f.x), y(f.y), z(f.z) {}
-	explicit V3(DirectX::FXMVECTOR v) noexcept { *this = v; }
+	explicit V3(const DirectX::XMFLOAT3 &xmf3) noexcept : x(xmf3.x), y(xmf3.y), z(xmf3.z) {}
+	explicit V3(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
 
 	operator DirectX::XMFLOAT3() const noexcept {
 		return { x, y, z };
@@ -26,14 +26,14 @@ struct V3 {
 	operator DirectX::XMVECTOR() const noexcept {
 		return DirectX::XMVectorSet(x, y, z, 0.0f);
 	}
-	V3 &operator=(const DirectX::XMFLOAT3 &f) noexcept {
-		x = f.x; y = f.y; z = f.z;
+	V3 &operator=(const DirectX::XMFLOAT3 &xmf3) noexcept {
+		x = xmf3.x; y = xmf3.y; z = xmf3.z;
 		return *this;
 	}
-	V3 &operator=(DirectX::FXMVECTOR v) noexcept {
-		DirectX::XMFLOAT3 f;
-		DirectX::XMStoreFloat3(&f, v);
-		x = f.x; y = f.y; z = f.z;
+	V3 &operator=(DirectX::FXMVECTOR fxm) noexcept {
+		DirectX::XMFLOAT3 xmf3;
+		DirectX::XMStoreFloat3(&xmf3, fxm);
+		x = xmf3.x; y = xmf3.y; z = xmf3.z;
 		return *this;
 	}
 	constexpr V3 operator-() const noexcept {
