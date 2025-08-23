@@ -50,6 +50,7 @@
 *.pdb
 *.vcxproj
 *.vcxproj.user
+*.vcxproj.filters
 *.sln
 *.cso
 
