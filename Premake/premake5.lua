@@ -1,6 +1,5 @@
 print("Starting premake process")
 include "common.lua"
-include "external_dependencies.lua"
 
 -- a little bit janky but gets to job done
 local includeTests = false

@@ -1,4 +1,4 @@
-include "../../../Premake/common.lua"
+include "../../Premake/common.lua"
 print("Setting up Editor Tests")
 
 local NAME = EDITOR_NAME.." Tests"
@@ -7,7 +7,7 @@ project(NAME)
     location(directories.temp)
     language("C++")
     cppdialect(cppVersion)
-    kind("StaticLib")
+    kind("ConsoleApp")
 
     dependson{ CORE_NAME, EXTERNAL_NAME }
 
@@ -25,7 +25,7 @@ project(NAME)
         directories.externalInclude,
         directories.core,
 
-        directories.gtest,
+        directories.gtestInclude,
 
         directories.editor,
         directories.editorTest,
