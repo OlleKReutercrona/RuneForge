@@ -21,9 +21,6 @@ workspace(WORKSPACE_NAME)
         RELEASE_BUILD_NAME
     }
 
-print("Setting up folder structure")
-
-MakeFolderStructure()
 
 print("Including other directories")
     
