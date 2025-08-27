@@ -39,12 +39,15 @@ inline bool operator==(const DirectX::XMMATRIX& lhs, const Matrix3x3& rhs) noexc
 	return DirectX::XMMatrixEqual(lhs, rhs);
 }
 
+
+//***********************************************************************
 TEST(Matrix3x3Tests, DefaultContructor) {
 	Matrix3x3 matrix;
 
 	EXPECT_EQ(matrix, XMMatrixIdentity());
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, CopyContructor) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -62,6 +65,7 @@ TEST(Matrix3x3Tests, CopyContructor) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, AssignmentOperator) {
 	Matrix3x3 matrix1;
 	Matrix3x3 matrix2;
@@ -73,6 +77,7 @@ TEST(Matrix3x3Tests, AssignmentOperator) {
 	EXPECT_EQ(matrix3, XMMatrixIdentity());
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, MultiplicationOperator) {
 	Matrix3x3 matrix1;
 	Matrix3x3 matrix2;
@@ -80,6 +85,7 @@ TEST(Matrix3x3Tests, MultiplicationOperator) {
 	EXPECT_EQ(result.mMatrix, matrix1.mMatrix * matrix2.mMatrix);
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, MultiplicationAssignmentOperator) {
 	Matrix3x3 matrix1;
 	Matrix3x3 matrix2;
@@ -87,6 +93,7 @@ TEST(Matrix3x3Tests, MultiplicationAssignmentOperator) {
 	EXPECT_EQ(matrix1.mMatrix, XMMatrixIdentity());
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, AdditionOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -105,6 +112,7 @@ TEST(Matrix3x3Tests, AdditionOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, AdditionAssignmentOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -123,6 +131,7 @@ TEST(Matrix3x3Tests, AdditionAssignmentOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, SubtractionOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -141,6 +150,7 @@ TEST(Matrix3x3Tests, SubtractionOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, SubtractionAssignmentOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -159,6 +169,7 @@ TEST(Matrix3x3Tests, SubtractionAssignmentOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, ScalarMultiplicationOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -174,6 +185,7 @@ TEST(Matrix3x3Tests, ScalarMultiplicationOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, ScalarMultiplicationAssignmentOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -189,6 +201,7 @@ TEST(Matrix3x3Tests, ScalarMultiplicationAssignmentOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, ScalarDivisionOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat(1.0f, 10000.0f);
@@ -204,6 +217,7 @@ TEST(Matrix3x3Tests, ScalarDivisionOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, ScalarDivisionAssignmentOperator) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat(1.0f, 10000.0f);
@@ -219,6 +233,7 @@ TEST(Matrix3x3Tests, ScalarDivisionAssignmentOperator) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, Transpose) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat();
@@ -233,6 +248,7 @@ TEST(Matrix3x3Tests, Transpose) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, Inverse) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat(1.0f, 10000.0f);
@@ -247,6 +263,7 @@ TEST(Matrix3x3Tests, Inverse) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, CreateRotationAroundX) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat(-3.14f, 3.14f);
@@ -257,6 +274,7 @@ TEST(Matrix3x3Tests, CreateRotationAroundX) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, CreateRotationAroundY) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat(-3.14f, 3.14f);
@@ -267,6 +285,7 @@ TEST(Matrix3x3Tests, CreateRotationAroundY) {
 	}
 }
 
+//***********************************************************************
 TEST(Matrix3x3Tests, CreateRotationAroundZ) {
 	for(int i = 0; i < 50; ++i) {
 		float randomValue = testUtility.GetRandomFloat(-3.14f, 3.14f);
