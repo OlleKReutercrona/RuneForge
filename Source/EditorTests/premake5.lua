@@ -19,6 +19,8 @@ project(NAME)
     files {
         directories.editorTest.."**.h",
         directories.editorTest.."**.cpp",
+        directories.gtestSrc.."src\\gtest_main.cc",
+        directories.gtestSrc.."src\\gtest-all.cc",
     }
 
     includedirs {
@@ -26,6 +28,7 @@ project(NAME)
         directories.core,
 
         directories.gtestInclude,
+        directories.gtestSrc,
 
         directories.editor,
         directories.editorTest,
