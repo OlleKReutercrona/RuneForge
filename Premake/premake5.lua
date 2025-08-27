@@ -21,6 +21,9 @@ workspace(WORKSPACE_NAME)
         RELEASE_BUILD_NAME
     }
 
+print("Create folder structure")
+
+MakeFolderStructure()
 
 print("Including other directories")
     

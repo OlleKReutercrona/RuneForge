@@ -63,11 +63,15 @@ directories = {
     debugLib        = sourcePath .. "External\\Lib\\Debug\\",
     releaseLib      = sourcePath .. "External\\Lib\\Release\\",
 
-    -- Tests
+
+    premake         = basePath .. "Premake",
+ }
+
+ externalDirectories = {
+    -- gtest
     gtestInclude    = sourcePath .. "External\\Include\\googleTest\\googletest\\include\\",
     gtestSrc        = sourcePath .. "External\\Include\\googleTest\\googletest\\",
 
-    premake         = basePath .. "Premake",
  }
 
 function MakeFolderStructure()
