@@ -47,13 +47,13 @@ directories = {
     coreEngine      = sourcePath .. "Core\\Engine\\",
     corePch         = sourcePath .. "Core\\pch\\",
 
-    coreTest        = sourcePath .. "Core\\Tests\\",
+    coreTest        = sourcePath .. "CoreTests\\",
 
     -- Editor
     editor          = sourcePath .. "Editor\\",
     editorPch       = sourcePath .. "Editor\\pch\\",
 
-    editorTest      = sourcePath .. "Editor\\Tests\\",
+    editorTest      = sourcePath .. "EditorTests\\",
 
     -- External
     external        = sourcePath .. "External\\",
@@ -63,7 +63,9 @@ directories = {
     debugLib        = sourcePath .. "External\\Lib\\Debug\\",
     releaseLib      = sourcePath .. "External\\Lib\\Release\\",
 
-    gtest           = sourcePath .. "External\\Include\\gtest\\googletest\\include\\",
+    -- Tests
+    gtestInclude    = sourcePath .. "External\\Include\\googleTest\\googletest\\include\\",
+    gtestSrc        = sourcePath .. "External\\Include\\googleTest\\googletest\\",
 
     premake         = basePath .. "Premake",
  }

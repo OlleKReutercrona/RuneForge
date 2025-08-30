@@ -1,6 +1,15 @@
 print("Starting premake process")
 include "common.lua"
-include "external_dependencies.lua"
+
+-- a little bit janky but gets to job done
+local includeTests = false
+
+-- loops through the arguments and checks for matches
+    for i, arg in ipairs(_ARGS) do
+        if(arg == "tests") then
+            includeTests = true
+        end
+    end
 
 workspace(WORKSPACE_NAME)
     location(directories.root)
@@ -17,22 +26,12 @@ print("Setting up folder structure")
 MakeFolderStructure()
 
 print("Including other directories")
-
+    
 include(directories.external)
 include(directories.editor)
 include(directories.core)
 
--- a little bit janky but gets to job done
-local includeTests = false
-
--- loops through the arguments and checks for matches
-for i, arg in ipairs(_ARGS) do
-    if(arg == "tests") then
-        includeTests = true
-    end
-end
-
-
+    
 if(includeTests) then
     FetchGoogleTest()
     
@@ -40,7 +39,7 @@ if(includeTests) then
     include(directories.editorTest)
     include(directories.coreTest)
 end
-
+    
 include(directories.project)
 
 print("\nBuild complete, happy developing!\n")
