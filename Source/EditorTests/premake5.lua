@@ -19,16 +19,16 @@ project(NAME)
     files {
         directories.editorTest.."**.h",
         directories.editorTest.."**.cpp",
-        directories.gtestSrc.."src\\gtest_main.cc",
-        directories.gtestSrc.."src\\gtest-all.cc",
+        externalDirectories.gtestSrc.."src\\gtest_main.cc",
+        externalDirectories.gtestSrc.."src\\gtest-all.cc",
     }
 
     includedirs {
         directories.externalInclude,
         directories.core,
 
-        directories.gtestInclude,
-        directories.gtestSrc,
+        externalDirectories.gtestInclude,
+        externalDirectories.gtestSrc,
 
         directories.editor,
         directories.editorTest,
