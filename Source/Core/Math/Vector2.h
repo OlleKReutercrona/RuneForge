@@ -112,7 +112,90 @@ inline const Vector2 Vector2::UNIT_X(1, 0);
 inline const Vector2 Vector2::UNIT_Y(0, 1);
 inline const Vector2 Vector2::UNIT_SCALE(1, 1);
 
-
 inline Vector2 Lerp(const Vector2 &a, const Vector2 &b, float t) noexcept {
 	return (a * (1.0f - t)) + (b * t);
 }
+
+
+
+
+struct Vector2i {
+	int x = 0;
+	int y = 0;
+
+	static const Vector2i ZERO;
+	static const Vector2i UNIT_X;
+	static const Vector2i UNIT_Y;
+	static const Vector2i UNIT_SCALE;
+
+	constexpr Vector2i() noexcept : x(0), y(0) {}
+	constexpr Vector2i(int X, int Y) noexcept : x(X), y(Y) {}
+
+
+	constexpr Vector2i operator-() const noexcept {
+		return { -x, -y };
+	}
+	Vector2i &operator+=(const Vector2i &rhs) noexcept {
+		x += rhs.x;
+		y += rhs.y;
+		return *this;
+	}
+	Vector2i &operator-=(const Vector2i &rhs) noexcept {
+		x -= rhs.x;
+		y -= rhs.y;
+		return *this;
+	}
+	Vector2i &operator*=(int s) noexcept {
+		x *= s;
+		y *= s;
+		return *this;
+	}
+	Vector2i &operator/=(int s) noexcept {
+		assert(s != 0 && "Division by zero in Vector2i::operator/=");
+		x /= s;
+		y /= s;
+		return *this;
+	}
+	friend Vector2i operator+(Vector2i a, const Vector2i &b) noexcept {
+		a += b;
+		return a;
+	}
+	friend Vector2i operator-(Vector2i a, const Vector2i &b) noexcept {
+		a -= b;
+		return a;
+	}
+	friend Vector2i operator*(Vector2i a, int s) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector2i operator*(int s, Vector2i a) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector2i operator/(Vector2i a, int s) noexcept {
+		assert(s != 0 && "Division by zero in Vector2i::operator/");
+		a /= s;
+		return a;
+	}
+	friend bool operator==(const Vector2i &a, const Vector2i &b) noexcept {
+		return a.x == b.x && a.y == b.y;
+	}
+
+	friend bool operator!=(const Vector2i &a, const Vector2i &b) noexcept {
+		return !(a == b);
+	}
+	int Dot(const Vector2i &other) const noexcept {
+		return x * other.x + y * other.y;
+	}
+	int ManhattanLength() const noexcept {
+		return std::abs(x) + std::abs(y);
+	}
+	int LengthSquared() const noexcept {
+		return x * x + y * y;
+	}
+};
+
+inline const Vector2i Vector2i::ZERO(0, 0);
+inline const Vector2i Vector2i::UNIT_X(1, 0);
+inline const Vector2i Vector2i::UNIT_Y(0, 1);
+inline const Vector2i Vector2i::UNIT_SCALE(1, 1);
