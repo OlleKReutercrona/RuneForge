@@ -33,8 +33,6 @@ include(directories.core)
 
     
 if(includeTests) then
-    FetchGoogleTest()
-    
     print("\nIncluding tests\n")
     include(directories.editorTest)
     include(directories.coreTest)
