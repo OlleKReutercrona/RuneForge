@@ -17,7 +17,7 @@ struct Vector3 {
 	static const Vector3 UNIT_Z;
 	static const Vector3 UNIT_SCALE;
 
-	constexpr Vector3() noexcept : x(0), y(0), z(0) {}
+	constexpr Vector3() noexcept : x(0.0f), y(0.0f), z(0.0f) {}
 	constexpr Vector3(float X, float Y, float Z) noexcept : x(X), y(Y), z(Z) {}
 	explicit Vector3(const DirectX::XMFLOAT3 &xmf3) noexcept : x(xmf3.x), y(xmf3.y), z(xmf3.z) {}
 	explicit Vector3(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }

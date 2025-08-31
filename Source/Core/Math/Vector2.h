@@ -14,7 +14,7 @@ struct Vector2 {
 	static const Vector2 UNIT_Y;
 	static const Vector2 UNIT_SCALE;
 
-	constexpr Vector2() noexcept : x(0), y(0) {}
+	constexpr Vector2() noexcept : x(0.0f), y(0.0f) {}
 	constexpr Vector2(float X, float Y) noexcept : x(X), y(Y) {}
 	explicit Vector2(const DirectX::XMFLOAT2 &xmf2) noexcept : x(xmf2.x), y(xmf2.y) {}
 	explicit Vector2(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
