@@ -1,4 +1,4 @@
-include "../../../Premake/common.lua"
+include "../../Premake/common.lua"
 print("Setting up Core Tests")
 
 local NAME = CORE_NAME.." Tests"
@@ -7,9 +7,9 @@ project(NAME)
     location(directories.temp)
     language("C++")
     cppdialect(cppVersion)
-    kind("StaticLib")
+    kind("ConsoleApp")
 
-    dependson{ EXTERNAL_NAME }
+    dependson{ CORE_NAME, EXTERNAL_NAME }
 
     debugdir(directories.bin)
     targetdir(directories.bin)
@@ -17,15 +17,18 @@ project(NAME)
     objdir(directories.temp.."/"..NAME.."/%{cfg.buildcfg}")
 
     files {
-        directories.editorTest.."**.h",
-        directories.editorTest.."**.cpp",
+        directories.coreTest.."**.h",
+        directories.coreTest.."**.cpp",
+        externalDirectories.gtestSrc.."src\\gtest_main.cc",
+        externalDirectories.gtestSrc.."src\\gtest-all.cc",
     }
 
     includedirs {
         directories.externalInclude,
         directories.core,
 
-        directories.gtest,
+        externalDirectories.gtestInclude,
+        externalDirectories.gtestSrc,
 
         directories.coreTest,
     }
