@@ -147,3 +147,97 @@ inline const Vector3 Vector3::UNIT_X(1, 0, 0);
 inline const Vector3 Vector3::UNIT_Y(0, 1, 0);
 inline const Vector3 Vector3::UNIT_Z(0, 0, 1);
 inline const Vector3 Vector3::UNIT_SCALE(1, 1, 1);
+
+struct Vector3i {
+	int x = 0;
+	int y = 0;
+	int z = 0;
+
+	static const Vector3i ZERO;
+	static const Vector3i UNIT_X;
+	static const Vector3i UNIT_Y;
+	static const Vector3i UNIT_Z;
+	static const Vector3i UNIT_SCALE;
+
+	constexpr Vector3i() noexcept : x(0), y(0), z(0) {}
+	constexpr Vector3i(int X, int Y, int Z) noexcept : x(X), y(Y), z(Z) {}
+
+	constexpr Vector3i operator-() const noexcept {
+		return { -x, -y, -z };
+	}
+	Vector3i &operator+=(const Vector3i &rhs) noexcept {
+		x += rhs.x;
+		y += rhs.y;
+		z += rhs.z;
+		return *this;
+	}
+	Vector3i &operator-=(const Vector3i &rhs) noexcept {
+		x -= rhs.x;
+		y -= rhs.y;
+		z -= rhs.z;
+		return *this;
+	}
+	Vector3i &operator*=(int s) noexcept {
+		x *= s;
+		y *= s;
+		z *= s;
+		return *this;
+	}
+	Vector3i &operator/=(int s) noexcept {
+		assert(s != 0 && "Division by zero in Vector3i::operator/=");
+		x /= s;
+		y /= s;
+		z /= s;
+		return *this;
+	}
+	friend Vector3i operator+(Vector3i a, const Vector3i &b) noexcept {
+		a += b;
+		return a;
+	}
+	friend Vector3i operator-(Vector3i a, const Vector3i &b) noexcept {
+		a -= b;
+		return a;
+	}
+	friend Vector3i operator*(Vector3i a, int s) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector3i operator*(int s, Vector3i a) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector3i operator/(Vector3i a, int s) noexcept {
+		assert(s != 0 && "Division by zero in Vector3i::operator/");
+		a /= s;
+		return a;
+	}
+	friend bool operator==(const Vector3i &a, const Vector3i &b) noexcept {
+		return a.x == b.x && a.y == b.y && a.z == b.z;
+	}
+	friend bool operator!=(const Vector3i &a, const Vector3i &b) noexcept {
+		return !(a == b);
+	}
+
+	int Dot(const Vector3i &other) const noexcept {
+		return x * other.x + y * other.y + z * other.z;
+	}
+	int LengthSquared() const noexcept {
+		return x * x + y * y + z * z;
+	}
+	int ManhattanLength() const noexcept {
+		return std::abs(x) + std::abs(y) + std::abs(z);
+	}
+	Vector3i Cross(const Vector3i &other) const noexcept {
+		return {
+			(y * other.z) - (z * other.y),
+			(z * other.x) - (x * other.z),
+			(x * other.y) - (y * other.x)
+		};
+	}
+};
+
+inline const Vector3i Vector3i::ZERO(0, 0, 0);
+inline const Vector3i Vector3i::UNIT_X(1, 0, 0);
+inline const Vector3i Vector3i::UNIT_Y(0, 1, 0);
+inline const Vector3i Vector3i::UNIT_Z(0, 0, 1);
+inline const Vector3i Vector3i::UNIT_SCALE(1, 1, 1);
