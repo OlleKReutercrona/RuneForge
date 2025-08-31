@@ -1,5 +1,5 @@
 #pragma once
-#include "V2.h"
+#include "Vector2.h"
 #include "Debug/DebugHelpers.h"
 
 #include <DirectXMath.h>
@@ -7,7 +7,9 @@
 
 
 struct Vector3 {
-	float x, y, z;
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
 
 	static const Vector3 ZERO;
 	static const Vector3 UNIT_X;
