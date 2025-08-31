@@ -112,7 +112,6 @@ inline const Vector2 Vector2::UNIT_X(1, 0);
 inline const Vector2 Vector2::UNIT_Y(0, 1);
 inline const Vector2 Vector2::UNIT_SCALE(1, 1);
 
-typedef Vector2 V2;
 
 inline Vector2 Lerp(const Vector2 &a, const Vector2 &b, float t) noexcept {
 	return (a * (1.0f - t)) + (b * t);
