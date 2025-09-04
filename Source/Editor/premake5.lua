@@ -2,24 +2,24 @@ include "../../Premake/common.lua"
 print("Setting up editor")
 
 project(EDITOR_NAME)
-    location(directories.editor)
+    location(directories.temp)
     language "C++"
     cppdialect(cppVersion)
-    dependson{ CORE_NAME, EXTERNAL_NAME }
-
-    links(LIBRARY_LIST)
-
     kind("StaticLib")
-
-    pchheader("stdafx.h")
-    pchsource("pch/stdafx.cpp")
-
-    shaderincludedirs(directories.coreShaders)
-
+    
     targetdir(directories.intermediateLib)
     debugdir(directories.intermediateLib)
     objdir(directories.temp.."/"..EDITOR_NAME.."/%{cfg.buildcfg}")
-    targetname(EDITOR_NAME.."/%{cfg.buildcfg}")
+    targetname(EDITOR_NAME.."_%{cfg.buildcfg}")
+    
+    dependson{ CORE_NAME, EXTERNAL_NAME }
+    
+    links(LIBRARY_LIST)
+    
+    shaderincludedirs(directories.coreShaders)
+
+    pchheader("stdafx.h")
+    pchsource("pch/stdafx.cpp")
 
     files {
         directories.editor.."**.h",
