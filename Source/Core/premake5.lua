@@ -2,7 +2,7 @@ include "../../Premake/common.lua"
 print("Setting up core")
 
 project(CORE_NAME)
-    location(directories.core)
+    location(directories.temp)
     language("C++")
     cppdialect(cppVersion)
     kind("StaticLib")
@@ -30,6 +30,8 @@ project(CORE_NAME)
         directories.core,
 
         directories.corePch,
+
+        directories.root,
     }
 
     filter(CONFIG_FILTERS.DEBUG)

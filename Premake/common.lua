@@ -1,9 +1,9 @@
 -- COMMON VARIABLES --
 WORKSPACE_NAME = "RuneForge"
 
-PROJECT_NAME = "RuneForge"
-CORE_NAME = WORKSPACE_NAME .. " Core"
-EDITOR_NAME = WORKSPACE_NAME .. " Editor"
+PROJECT_NAME = "Project"
+CORE_NAME = "Core"
+EDITOR_NAME = "Editor"
 EXTERNAL_NAME = "External"
 
 cppVersion = "C++20"
@@ -34,7 +34,7 @@ directories = {
     temp            = basePath .. "Temp\\",
     shaders         = basePath .. "Bin\\Shaders\\",
 
-    intermediateLib = basePath .. "Temp\\IntermediateLib",
+    intermediateLib = basePath .. "Temp\\IntermediateLib\\",
 
     -- Project, maybe remove if editor can create new projects
     project         = sourcePath .. "Project\\",
@@ -87,8 +87,21 @@ local function FindLibraries()
 
     local foundNames = {}
     local out = {}
+    print("Searching for external libs...")
     for _, lib in pairs(os.matchfiles(directories.externalLib.."**")) do        
         if (path.getextension(lib) == ".lib") then
+            local name = path.getname(lib)
+            if not foundNames[name] then
+                out[#out+1] = path.getname(lib)
+                foundNames[name] = true
+                print(name)
+            end
+        end
+    end
+    
+    print("Searching for intermediate libs...")
+    for _, lib in pairs(os.matchfiles(directories.intermediateLib.."**")) do
+        if(path.getextension(lib) == ".lib") then
             local name = path.getname(lib)
             if not foundNames[name] then
                 out[#out+1] = path.getname(lib)
