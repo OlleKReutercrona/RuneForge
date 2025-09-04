@@ -5,7 +5,8 @@
 #include <cmath>
 
 
-struct Vector2 {
+class Vector2 {
+public:
 	float x = 0.0f;
 	float y = 0.0f;
 
@@ -16,8 +17,14 @@ struct Vector2 {
 
 	constexpr Vector2() noexcept : x(0.0f), y(0.0f) {}
 	constexpr Vector2(float X, float Y) noexcept : x(X), y(Y) {}
-	explicit Vector2(const DirectX::XMFLOAT2 &xmf2) noexcept : x(xmf2.x), y(xmf2.y) {}
-	explicit Vector2(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
+	Vector2(const DirectX::XMFLOAT2 &xmf2) noexcept : x(xmf2.x), y(xmf2.y) {}
+	Vector2(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
+
+#pragma region operators
+
+	// ============================================================
+	// DirectX conversions / assignments
+	// ============================================================
 
 	operator DirectX::XMFLOAT2() const noexcept {
 		return { x, y };
@@ -37,6 +44,11 @@ struct Vector2 {
 		y = xmFloat2.y;
 		return *this;
 	}
+
+	// ============================================================
+	// Regular operators
+	// ============================================================
+
 	constexpr Vector2 operator-() const noexcept {
 		return { -x, -y };
 	}
@@ -56,7 +68,9 @@ struct Vector2 {
 		return *this;
 	}
 	Vector2 &operator/=(float s) noexcept {
-		ASSERT_MSG(s != 0.0f, "Division by zero in Vector2::operator/=");
+
+		ASSERT_MSG(s == 0.0f, "Division by zero in Vector2::operator/=");
+
 		x /= s;
 		y /= s;
 		return *this;
@@ -70,7 +84,7 @@ struct Vector2 {
 		return a;
 	}
 	friend Vector2 operator/(Vector2 a, float s) noexcept {
-		ASSERT_MSG(s != 0.0f, "Division by zero in Vector2::operator/");
+		ASSERT_MSG(s == 0.0f, "Division by zero in Vector2::operator/");
 		a /= s;
 		return a;
 	}
@@ -84,6 +98,8 @@ struct Vector2 {
 		result *= s;
 		return result;
 	}
+
+#pragma endregion
 
 	float LengthSquared() const noexcept {
 		return (x * x + y * y);
@@ -101,8 +117,12 @@ struct Vector2 {
 		return (*this) * (1.0f / sqrt(lsq));
 	}
 	_NODISCARD Vector2 Reflect(const Vector2 &normal) const noexcept {
-		ASSERT_MSG(fabsf(normal.LengthSquared() - 1.0f) > 1e-3f, "Vector2::Reflect recieved non-normalized normal");
+		ASSERT_MSG(abs(normal.LengthSquared() - 1.0f) < 1e-3f, "Vector2::Reflect recieved non-normalized normal");
 		return 2.0f * normal * this->Dot(normal) - *this;
+	}
+
+	inline Vector2 Lerp(const Vector2 &a, const Vector2 &b, float t) noexcept {
+		return (a * (1.0f - t)) + (b * t);
 	}
 
 };
@@ -112,8 +132,118 @@ inline const Vector2 Vector2::UNIT_X(1, 0);
 inline const Vector2 Vector2::UNIT_Y(0, 1);
 inline const Vector2 Vector2::UNIT_SCALE(1, 1);
 
-typedef Vector2 V2;
 
-inline Vector2 Lerp(const Vector2 &a, const Vector2 &b, float t) noexcept {
-	return (a * (1.0f - t)) + (b * t);
-}
+class Vector2i {
+public:
+	int x = 0;
+	int y = 0;
+
+	static const Vector2i ZERO;
+	static const Vector2i UNIT_X;
+	static const Vector2i UNIT_Y;
+	static const Vector2i UNIT_SCALE;
+
+	constexpr Vector2i() noexcept : x(0), y(0) {}
+	constexpr Vector2i(int X, int Y) noexcept : x(X), y(Y) {}
+	Vector2i(const DirectX::XMINT2 &xmi2) noexcept : x(xmi2.x), y(xmi2.y) {}
+	Vector2i(DirectX::FXMVECTOR &fxm) noexcept { *this = fxm; }
+
+#pragma region operators
+
+	// ============================================================
+	// DirectX conversions / assignments
+	// ============================================================
+
+	operator DirectX::XMINT2() const noexcept {
+		return { x, y };
+	}
+	operator DirectX::XMVECTOR() const noexcept {
+		return DirectX::XMVectorSet(static_cast<float>(x), static_cast<float>(y), 0.0f, 0.0f);
+	}
+	Vector2i &operator=(const DirectX::XMINT2 &xmi2) noexcept {
+		x = xmi2.x;
+		y = xmi2.y;
+		return *this;
+	}
+	Vector2i &operator=(DirectX::FXMVECTOR fxm) noexcept {
+		DirectX::XMINT2 xmInt2;
+		DirectX::XMStoreInt2(reinterpret_cast<uint32_t *>(&xmInt2), fxm);
+		x = xmInt2.x;
+		y = xmInt2.y;
+		return *this;
+	}
+
+	// ============================================================
+	// Regular operators
+	// ============================================================
+
+	constexpr Vector2i operator-() const noexcept {
+		return { -x, -y };
+	}
+	Vector2i &operator+=(const Vector2i &rhs) noexcept {
+		x += rhs.x;
+		y += rhs.y;
+		return *this;
+	}
+	Vector2i &operator-=(const Vector2i &rhs) noexcept {
+		x -= rhs.x;
+		y -= rhs.y;
+		return *this;
+	}
+	Vector2i &operator*=(int s) noexcept {
+		x *= s;
+		y *= s;
+		return *this;
+	}
+	Vector2i &operator/=(int s) noexcept {
+		assert(s != 0 && "Division by zero in Vector2i::operator/=");
+		x /= s;
+		y /= s;
+		return *this;
+	}
+	friend Vector2i operator+(Vector2i a, const Vector2i &b) noexcept {
+		a += b;
+		return a;
+	}
+	friend Vector2i operator-(Vector2i a, const Vector2i &b) noexcept {
+		a -= b;
+		return a;
+	}
+	friend Vector2i operator*(Vector2i a, int s) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector2i operator*(int s, Vector2i a) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector2i operator/(Vector2i a, int s) noexcept {
+		assert(s != 0 && "Division by zero in Vector2i::operator/");
+		a /= s;
+		return a;
+	}
+	friend bool operator==(const Vector2i &a, const Vector2i &b) noexcept {
+		return a.x == b.x && a.y == b.y;
+	}
+
+#pragma endregion
+
+	friend bool operator!=(const Vector2i &a, const Vector2i &b) noexcept {
+		return !(a == b);
+	}
+	int Dot(const Vector2i &other) const noexcept {
+		return x * other.x + y * other.y;
+	}
+	int ManhattanLength() const noexcept {
+		return std::abs(x) + std::abs(y);
+	}
+	int LengthSquared() const noexcept {
+		return x * x + y * y;
+	}
+
+};
+
+inline const Vector2i Vector2i::ZERO(0, 0);
+inline const Vector2i Vector2i::UNIT_X(1, 0);
+inline const Vector2i Vector2i::UNIT_Y(0, 1);
+inline const Vector2i Vector2i::UNIT_SCALE(1, 1);

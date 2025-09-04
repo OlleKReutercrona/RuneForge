@@ -6,7 +6,8 @@
 #include <cmath>
 
 
-struct Vector3 {
+class Vector3 {
+public:
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
@@ -19,8 +20,14 @@ struct Vector3 {
 
 	constexpr Vector3() noexcept : x(0.0f), y(0.0f), z(0.0f) {}
 	constexpr Vector3(float X, float Y, float Z) noexcept : x(X), y(Y), z(Z) {}
-	explicit Vector3(const DirectX::XMFLOAT3 &xmf3) noexcept : x(xmf3.x), y(xmf3.y), z(xmf3.z) {}
-	explicit Vector3(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
+	Vector3(const DirectX::XMFLOAT3 &xmf3) noexcept : x(xmf3.x), y(xmf3.y), z(xmf3.z) {}
+	Vector3(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
+
+#pragma region operators
+
+	// ============================================================
+	// DirectX conversions / assignments
+	// ============================================================
 
 	operator DirectX::XMFLOAT3() const noexcept {
 		return { x, y, z };
@@ -35,9 +42,16 @@ struct Vector3 {
 	Vector3 &operator=(DirectX::FXMVECTOR fxm) noexcept {
 		DirectX::XMFLOAT3 xmf3;
 		DirectX::XMStoreFloat3(&xmf3, fxm);
-		x = xmf3.x; y = xmf3.y; z = xmf3.z;
+		x = xmf3.x;
+		y = xmf3.y;
+		z = xmf3.z;
 		return *this;
 	}
+
+	// ============================================================
+	// Regular operators
+	// ============================================================
+
 	constexpr Vector3 operator-() const noexcept {
 		return { -x, -y, -z };
 	}
@@ -60,9 +74,7 @@ struct Vector3 {
 		return *this;
 	}
 	Vector3 &operator/=(float s) noexcept {
-
 		ASSERT_MSG(s != 0.0f, "Division by zero in Vector3::operator/=");
-
 		x /= s;
 		y /= s;
 		z /= s;
@@ -77,9 +89,7 @@ struct Vector3 {
 		return a;
 	}
 	friend Vector3 operator/(Vector3 a, float s) noexcept {
-
 		ASSERT_MSG(s != 0.0f, "Division by zero in Vector3::operator/");
-
 		a /= s;
 		return a;
 	}
@@ -93,7 +103,8 @@ struct Vector3 {
 		result *= s;
 		return result;
 	}
-	
+#pragma endregion
+
 	float LengthSquared() const noexcept {
 		return (x * x + y * y + z * z);
 	}
@@ -137,6 +148,10 @@ struct Vector3 {
 		return Vector3(nx, ny, nz);
 	}
 
+	inline Vector3 Lerp(const Vector3 &a, const Vector3 &b, float t) noexcept {
+		return (a * (1.0f - t)) + (b * t);
+	}
+
 	_NODISCARD Vector2 xy() const noexcept { return Vector2(x, y); }
 	_NODISCARD Vector2 xz() const noexcept { return Vector2(x, z); }
 	_NODISCARD Vector2 yz() const noexcept { return Vector2(y, z); }
@@ -147,3 +162,137 @@ inline const Vector3 Vector3::UNIT_X(1, 0, 0);
 inline const Vector3 Vector3::UNIT_Y(0, 1, 0);
 inline const Vector3 Vector3::UNIT_Z(0, 0, 1);
 inline const Vector3 Vector3::UNIT_SCALE(1, 1, 1);
+
+class Vector3i {
+public:
+	int x = 0;
+	int y = 0;
+	int z = 0;
+
+	static const Vector3i ZERO;
+	static const Vector3i UNIT_X;
+	static const Vector3i UNIT_Y;
+	static const Vector3i UNIT_Z;
+	static const Vector3i UNIT_SCALE;
+
+	constexpr Vector3i() noexcept : x(0), y(0), z(0) {}
+	constexpr Vector3i(int X, int Y, int Z) noexcept : x(X), y(Y), z(Z) {}
+	Vector3i(const DirectX::XMINT3 &xmi3) noexcept : x(xmi3.x), y(xmi3.y), z(xmi3.z) {}
+	Vector3i(DirectX::FXMVECTOR fxm) noexcept { *this = fxm; }
+
+#pragma region operators
+
+	// ============================================================
+	// DirectX conversions / assignments
+	// ============================================================
+
+	operator DirectX::XMINT3() const noexcept {
+		return { x, y, z };
+	}
+	operator DirectX::XMVECTOR() const noexcept {
+		return DirectX::XMVectorSet(static_cast<float>(x), static_cast<float>(y), 0.0f, 0.0f);
+	}
+	Vector3i &operator=(const DirectX::XMINT3 &xmi3) noexcept {
+		x = xmi3.x; 
+		y = xmi3.y; 
+		z = xmi3.z;
+		return *this;
+	}
+	Vector3i &operator=(DirectX::FXMVECTOR fxm) noexcept {
+		DirectX::XMINT3 xmi3;
+		DirectX::XMStoreInt3(reinterpret_cast<uint32_t *>(&xmi3), fxm);
+		x = xmi3.x; 
+		y = xmi3.y; 
+		z = xmi3.z;
+		return *this;
+	}
+
+	// ============================================================
+	// Regular operators
+	// ============================================================
+
+	constexpr Vector3i operator-() const noexcept {
+		return { -x, -y, -z };
+	}
+	Vector3i &operator+=(const Vector3i &rhs) noexcept {
+		x += rhs.x;
+		y += rhs.y;
+		z += rhs.z;
+		return *this;
+	}
+	Vector3i &operator-=(const Vector3i &rhs) noexcept {
+		x -= rhs.x;
+		y -= rhs.y;
+		z -= rhs.z;
+		return *this;
+	}
+	Vector3i &operator*=(int s) noexcept {
+		x *= s;
+		y *= s;
+		z *= s;
+		return *this;
+	}
+	Vector3i &operator/=(int s) noexcept {
+		ASSERT_MSG(s == 0.0f, "Division by zero in Vector3::operator/=");
+		x /= s;
+		y /= s;
+		z /= s;
+		return *this;
+	}
+	friend Vector3i operator+(Vector3i a, const Vector3i &b) noexcept {
+		a += b;
+		return a;
+	}
+	friend Vector3i operator-(Vector3i a, const Vector3i &b) noexcept {
+		a -= b;
+		return a;
+	}
+	friend Vector3i operator*(Vector3i a, int s) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector3i operator*(int s, Vector3i a) noexcept {
+		a *= s;
+		return a;
+	}
+	friend Vector3i operator/(Vector3i a, int s) noexcept {
+		ASSERT_MSG(s == 0.0f, "Division by zero in Vector3::operator/=");
+		a /= s;
+		return a;
+	}
+	friend bool operator==(const Vector3i &a, const Vector3i &b) noexcept {
+		return (a.x == b.x) && (a.y == b.y) && (a.z == b.z);
+	}
+	friend bool operator!=(const Vector3i &a, const Vector3i &b) noexcept {
+		return !(a == b);
+	}
+
+#pragma endregion
+
+	int Dot(const Vector3i &other) const noexcept {
+		return x * other.x + y * other.y + z * other.z;
+	}
+	int LengthSquared() const noexcept {
+		return x * x + y * y + z * z;
+	}
+	int ManhattanLength() const noexcept {
+		return std::abs(x) + std::abs(y) + std::abs(z);
+	}
+	Vector3i Cross(const Vector3i &other) const noexcept {
+		return {
+			(y * other.z) - (z * other.y),
+			(z * other.x) - (x * other.z),
+			(x * other.y) - (y * other.x)
+		};
+	}
+
+	_NODISCARD Vector2i xy() const noexcept { return Vector2i(x, y); }
+	_NODISCARD Vector2i xz() const noexcept { return Vector2i(x, z); }
+	_NODISCARD Vector2i yz() const noexcept { return Vector2i(y, z); }
+};
+
+inline const Vector3i Vector3i::ZERO(0, 0, 0);
+inline const Vector3i Vector3i::UNIT_X(1, 0, 0);
+inline const Vector3i Vector3i::UNIT_Y(0, 1, 0);
+inline const Vector3i Vector3i::UNIT_Z(0, 0, 1);
+inline const Vector3i Vector3i::UNIT_SCALE(1, 1, 1);
