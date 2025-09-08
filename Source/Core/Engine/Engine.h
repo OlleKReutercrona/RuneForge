@@ -1,11 +1,8 @@
 #pragma once
-namespace RF {
-    // Might move to its own file later for include ease
-    struct FrameData {
-        float deltaTime = 0.0f;
-        float totalTime = 0.0f;
-	};
 
+
+namespace RF {
+    struct FrameData;
     class Window;
 
     class Engine {

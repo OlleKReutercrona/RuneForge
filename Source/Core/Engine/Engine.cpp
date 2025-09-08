@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Engine.h"
 #include "Window/Window.h"
+#include "frameData.h"
 
 RF::Engine::Engine() {
 }
