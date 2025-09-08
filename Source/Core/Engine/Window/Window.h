@@ -15,14 +15,13 @@ namespace RF {
 		WNDPROC windowProc = nullptr;
 	};
 
-
 	class Window {
 	public:
-		Window(WindowCreationParams params);
-		Window() = delete;
+		Window() = default;
 		Window(const Window&) = delete;
 		void operator=(const Window&) = delete;
 
+		void Init(const WindowCreationParams& params);
 		void SetSize(const unsigned int width, const unsigned int height); // TODO - Vector2ui
 		//const RF::V2ui Size() const; // TODO - Vector2ui
 
@@ -36,11 +35,11 @@ namespace RF {
 	private:
 		void ApplyWindowText();
 
-		std::wstring mWindowTitle;
-		std::wstring mCustomText;
-		unsigned int mWidth;
-		unsigned int mHeight;
-		float mAspectRatio;
-		HWND mHWND;
+		std::wstring mWindowTitle = {};
+		std::wstring mCustomText = {};
+		unsigned int mWidth = {};
+		unsigned int mHeight = {};
+		float mAspectRatio = {};
+		HWND mHWND = {};
 	};
 }
