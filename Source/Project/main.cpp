@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Windows.h"
+#include <Windows.h>
 #include "Core/Platform/WindowsApplication.h"
 
 _Use_decl_annotations_

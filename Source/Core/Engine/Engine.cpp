@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "Engine.h"
 #include "Window/Window.h"
+#include "frameData.h"
 
-RF::Engine::Engine(const RF::EngineCreationParams& params)
-{
+RF::Engine::Engine(const RF::EngineCreationParams& params) {
 	// TODO: Load some of these from config file
 	RF::WindowCreationParams windowParams;
 	windowParams.width = 1920;

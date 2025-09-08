@@ -1,10 +1,7 @@
 #include "stdafx.h"
 #include "Window.h"
 
-#include <stdexcept>
-
-void RF::Window::Init(const WindowCreationParams& params)
-{
+void RF::Window::Init(const WindowCreationParams& params) {
 	mWindowTitle = params.title;
 	mCustomText = L"";
 	mWidth = params.width;
