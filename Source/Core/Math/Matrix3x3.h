@@ -46,8 +46,6 @@ public:
 	DirectX::XMMATRIX mMatrix = {};
 };
 
-static inline Matrix3x3 zerMatrix = Matrix3x3();
-
 inline Matrix3x3::Matrix3x3(
 	const float r0c0, const float r0c1, const float r0c2, 
 	const float r1c0, const float r1c1, const float r1c2, 
