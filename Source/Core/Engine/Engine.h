@@ -22,16 +22,12 @@ namespace RF {
 
 		void Shutdown();
 
-        const std::wstring GetTitle() const;
-
         void OnResize(const unsigned int width, const unsigned int height);
 
     private:
-        void SetCustomWindowText(const std::wstring& text);
 
         std::shared_ptr<Window> mWindow;
 
         std::wstring mAssetsPath;
-        std::wstring mTitle;
     };
 }

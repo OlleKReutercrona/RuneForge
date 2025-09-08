@@ -15,14 +15,6 @@ void RF::Engine::Render(const FrameData& frameData) { frameData; }
 
 void RF::Engine::Shutdown() {}
 
-const std::wstring RF::Engine::GetTitle() const {
-	return mWindow->GetTitle();
-}
-
 void RF::Engine::OnResize(const unsigned int width, const unsigned int height) {
-	mWindow->SetWindowSize(width, height);
-}
-
-void RF::Engine::SetCustomWindowText(const std::wstring& text) {
-	mWindow->setCustomText(text);
+	mWindow->SetSize(width, height);
 }

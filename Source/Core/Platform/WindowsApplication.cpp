@@ -16,6 +16,7 @@ int RF::WindowsApplication::Run(HINSTANCE hInstance, int cmdShow) {
 	params.width = 1280;
 	params.height = 720;
 
+	// Create window class here and not in engine because of WindowProc callback requirement
 	auto window = std::make_shared<RF::Window>(params);
 	engine.Init(window);
 

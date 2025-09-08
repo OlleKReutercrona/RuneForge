@@ -23,12 +23,12 @@ namespace RF {
 		Window(const Window&) = delete;
 		void operator=(const Window&) = delete;
 
-		void SetWindowSize(const unsigned int width, const unsigned int height); // TODO - Vector2ui
-		//const RF::V2ui GetWindowSize() const; // TODO - Vector2ui
+		void SetSize(const unsigned int width, const unsigned int height); // TODO - Vector2ui
+		//const RF::V2ui Size() const; // TODO - Vector2ui
 
 		void SetTitle(const std::wstring& title);
-		void setCustomText(const std::wstring& text);
-		const std::wstring GetTitle() const;
+		void SetCustomText(const std::wstring& text);
+		const std::wstring Title() const;
 
 		HWND GetHWND() const;
 

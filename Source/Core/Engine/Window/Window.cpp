@@ -3,6 +3,7 @@
 
 RF::Window::Window(WindowCreationParams params) :
     mWindowTitle(params.title),
+	mCustomText(L""),
     mWidth(params.width),
     mHeight(params.height),
 	mAspectRatio(static_cast<float>(params.width) / static_cast<float>(params.height)), 
@@ -43,7 +44,7 @@ RF::Window::Window(WindowCreationParams params) :
 	ShowWindow(mHWND, params.cmdShow);
 }
 
-void RF::Window::SetWindowSize(const unsigned int width, const unsigned int height) {
+void RF::Window::SetSize(const unsigned int width, const unsigned int height) {
     mWidth = width;
 	mHeight = height;
 
@@ -56,13 +57,13 @@ void RF::Window::SetTitle(const std::wstring& title) {
 	ApplyWindowText();
 }
 
-void RF::Window::setCustomText(const std::wstring& text) {
+void RF::Window::SetCustomText(const std::wstring& text) {
 	mCustomText = text;
 
 	ApplyWindowText();
 }
 
-const std::wstring RF::Window::GetTitle() const {
+const std::wstring RF::Window::Title() const {
 	return mWindowTitle + L": " + mCustomText;
 }
 
@@ -73,6 +74,5 @@ HWND RF::Window::GetHWND() const {
 void RF::Window::SetFullScreen(const bool isFullScreen) { isFullScreen; }
 
 void RF::Window::ApplyWindowText() {
-    std::wstring windowText = mWindowTitle + mCustomText;
-    SetWindowText(mHWND, windowText.c_str());
+    SetWindowText(mHWND, Title().c_str());
 }
