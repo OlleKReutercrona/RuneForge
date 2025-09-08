@@ -5,14 +5,19 @@ namespace RF {
     struct FrameData;
     class Window;
 
+    struct EngineCreationParams {
+        WNDPROC windowProc = nullptr;
+        int cmdShow = 0;
+        HINSTANCE hInstance = nullptr;
+	};
+
     class Engine {
     public:
-        Engine();
+        Engine() = delete;
+        Engine(const EngineCreationParams& params);
         ~Engine() = default;
 		Engine(const Engine&) = delete;
 		void operator=(const Engine&) = delete;
-
-        void Init(std::shared_ptr<RF::Window> window);
 
 		void Update(const FrameData& frameData);
         void Render(const FrameData& frameData);
@@ -23,7 +28,7 @@ namespace RF {
 
     private:
 
-        std::shared_ptr<Window> mWindow;
+        std::unique_ptr<Window> mWindow;
 
         std::wstring mAssetsPath;
     };

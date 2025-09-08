@@ -5,21 +5,13 @@
 #include "Engine/frameData.h"
 
 int RF::WindowsApplication::Run(HINSTANCE hInstance, int cmdShow) {
-	RF::Engine engine;
 
-	// TODO: Half of these should be loaded from a config file
-	RF::WindowCreationParams params;
-	params.cmdShow = cmdShow;
-	params.hInstance = hInstance;
-	params.engine = &engine;
-	params.windowProc = WindowProc;
-	params.title = L"RuneForge";
-	params.width = 1280;
-	params.height = 720;
+	RF::EngineCreationParams engineParams;
+	engineParams.windowProc = WindowProc;
+	engineParams.cmdShow = cmdShow;
+	engineParams.hInstance = hInstance;
 
-	// Create window class here and not in engine because of WindowProc callback requirement
-	auto window = std::make_shared<RF::Window>(params);
-	engine.Init(window);
+	RF::Engine engine(engineParams);
 
 	MSG msg = { 0 };
 	while (msg.message != WM_QUIT) {
