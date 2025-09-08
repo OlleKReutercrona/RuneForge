@@ -6,6 +6,7 @@
 int RF::WindowsApplication::Run(HINSTANCE hInstance, int cmdShow) {
 	RF::Engine engine;
 
+	// TODO: Half of these should be loaded from a config file
 	RF::WindowCreationParams params;
 	params.cmdShow = cmdShow;
 	params.hInstance = hInstance;
@@ -44,6 +45,12 @@ LRESULT RF::WindowsApplication::WindowProc(HWND hWND, UINT message, WPARAM wPara
 	RF::Engine* engine = reinterpret_cast<RF::Engine*>(GetWindowLongPtr(hWND, GWLP_USERDATA));
 
 	switch (message) {
+	case WM_CREATE: {
+		// Saves the engine* passed from window constructor
+		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+		SetWindowLongPtr(hWND, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+		return 0;
+	}
 	case WM_DESTROY: {
 
 		PostQuitMessage(0);
@@ -52,7 +59,7 @@ LRESULT RF::WindowsApplication::WindowProc(HWND hWND, UINT message, WPARAM wPara
 	case WM_SIZE:
 	{
 		engine->OnResize(LOWORD(lParam), HIWORD(lParam));
-		break;
+		return 0;
 	}
 	}
 

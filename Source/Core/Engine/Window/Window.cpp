@@ -2,11 +2,11 @@
 #include "Window.h"
 
 RF::Window::Window(WindowCreationParams params) :
+    mWindowTitle(params.title),
     mWidth(params.width),
     mHeight(params.height),
-    mHWND(nullptr),
-    mWindowTitle(params.title),
-	mAspectRatio(static_cast<float>(params.width) / static_cast<float>(params.height)) {
+	mAspectRatio(static_cast<float>(params.width) / static_cast<float>(params.height)), 
+    mHWND(nullptr) {
 
     // Initialize the window class
     WNDCLASSEX windowClass = { 0 };
@@ -17,7 +17,7 @@ RF::Window::Window(WindowCreationParams params) :
     windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	windowClass.lpszClassName = mWindowTitle.c_str();
 	windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);
-    //windowClass.hIcon = icon; // Todo in the future
+    //windowClass.hIcon = icon; // TODO in the future
 
     RegisterClassEx(&windowClass);
 
@@ -34,11 +34,11 @@ RF::Window::Window(WindowCreationParams params) :
 		windowRect.right - windowRect.left,
 		windowRect.bottom - windowRect.top,
 		nullptr, // No parent window
-		nullptr, // todo : might use menus in the future
+		nullptr, // No menus (Maybe for editor in future)
 		params.hInstance,
         params.engine);
 
-	// todo check if hwnd is valid
+	// TODO check if hwnd is valid
 
 	ShowWindow(mHWND, params.cmdShow);
 }
@@ -46,6 +46,8 @@ RF::Window::Window(WindowCreationParams params) :
 void RF::Window::SetWindowSize(const unsigned int width, const unsigned int height) {
     mWidth = width;
 	mHeight = height;
+
+    // TODO: Resize event
 }
 
 void RF::Window::SetTitle(const std::wstring& title) {
