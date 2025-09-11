@@ -2,6 +2,9 @@
 #include "Engine.h"
 #include "Window/Window.h"
 #include "frameData.h"
+#include "Util/jsonUtil.h"
+
+#include <nlohmann/json.hpp>
 
 RF::Engine::Engine(const RF::EngineCreationParams& params) {
 	RF::WindowCreationParams windowParams;
@@ -27,14 +30,7 @@ void RF::Engine::OnResize(const unsigned int width, const unsigned int height) {
 }
 
 void RF::Engine::LoadConfigFile(RF::WindowCreationParams& windowParams) {
-	std::ifstream file("../config.json");
-	nlohmann::json json;
-	if (!file.good()) {
-		file.close();
-		return;
-	}
-
-	json = nlohmann::json::parse(file);
+	auto json = RF::Json::Parse("../config.json");
 
 	if (json.contains("windowSettings")) {
 		auto windowSettings = json["windowSettings"];
