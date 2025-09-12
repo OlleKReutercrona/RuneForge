@@ -6,6 +6,10 @@
 
 #include <nlohmann/json.hpp>
 
+namespace {
+	constexpr std::string_view gConfigFilePath = "../engineConfig.json";
+}
+
 RF::Engine::Engine(const RF::EngineCreationParams& params) {
 	RF::WindowCreationParams windowParams;
 	windowParams.hInstance = params.hInstance;
@@ -30,41 +34,23 @@ void RF::Engine::OnResize(const unsigned int width, const unsigned int height) {
 }
 
 void RF::Engine::LoadConfigFile(RF::WindowCreationParams& windowParams) {
-	auto json = RF::Json::Parse("../config.json");
+	auto json = RF::Json::Parse(static_cast<std::string>(gConfigFilePath));
 
-	if (json.contains("windowSettings")) {
-		auto windowSettings = json["windowSettings"];
-
-		if (windowSettings.contains("windowSize")) {
-			auto windowSize = windowSettings["windowSize"];
-			if (windowSize.contains("width")) {
-				windowParams.width = windowSize["width"].get<unsigned int>();
-			}
-			if (windowSize.contains("height")) {
-				windowParams.height = windowSize["height"].get<unsigned int>();
-			}
-		}
-
-		if (windowSettings.contains("title")) {
-			auto title = windowSettings["title"].get<std::string>();
-			windowParams.title = std::wstring(title.begin(), title.end());
-		}
-
-		if (windowSettings.contains("startInFullscreen")) {
-			windowParams.isFullScreen = windowSettings["startInFullscreen"].get<bool>();
-		}
-
-		if (windowSettings.contains("isResizable")) {
-			windowParams.isResizable = windowSettings["isResizable"].get<bool>();
-		}
-		// TODO: Implement later when vector4 and clear color is needed
-		//if (windowSettings.contains("clearColor")) {
-		//	Vector4 clearColor;
-		//	clearColor.x = windowSettings["clearColor"]["r"].get<float>();
-		//	clearColor.y = windowSettings["clearColor"]["g"].get<float>();
-		//	clearColor.z = windowSettings["clearColor"]["b"].get<float>();
-		//	clearColor.w = windowSettings["clearColor"]["a"].get<float>();
-		//}
+	auto windowSettingsJson = RF::Json::TryGet<nlohmann::json>(json, "windowSettings", {});
+	if (windowSettingsJson.empty()) {
+		return;
 	}
 
+	auto windowSizeJson = RF::Json::TryGet<nlohmann::json>(windowSettingsJson, "windowSize", {});
+	if (!windowSettingsJson.empty()) {
+		windowParams.width = RF::Json::TryGet(windowSizeJson, "width", windowParams.width);
+		windowParams.height = RF::Json::TryGet(windowSizeJson, "height", windowParams.height);
+	}
+
+	std::string title = RF::Json::TryGet(windowSettingsJson, "title", std::string("RuneForge"));
+	windowParams.title = std::wstring(title.begin(), title.end());
+
+	windowParams.isFullScreen = RF::Json::TryGet(windowSettingsJson, "startInFullscreen", false);
+
+	windowParams.isResizable = RF::Json::TryGet(windowSettingsJson, "isResizable", true);
 }

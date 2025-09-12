@@ -3,7 +3,7 @@
 #include "jsonUtil.h"
 
 namespace RF::Json {
-	constexpr std::string_view gJson = R"(.json)";
+	constexpr std::string_view gJson = ".json";
 
 	bool isJson(const std::string& directory) {
 		auto strPos = directory.find_last_of('.');
