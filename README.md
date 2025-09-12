@@ -2,23 +2,11 @@
 
 A project by Olle Karlson Reutercrona, Anton Eriksson and Daniel Rosén to further learn about game engines and C++. Our current end goal is to use it to build a simple vampire survivor inspired game.
 
-Setup 
-
-```git
-  git clone https://github.com/OlleKReutercrona/RuneForge.git
-  git submodule init
-  git submodule update
-```
-
 -------------------------------------
-
-:computer: **Target platform:** Windows 11
-
------------------------------------------------------------------------
 
 ### :white_check_mark: **Completed Features:**
 
--
+- [WIP] 💪
 
 ----------------------------------------------------
 
@@ -43,12 +31,27 @@ Setup
 
 ______________________________________________________
 
+:computer: **Target platform:** Windows
+
+______________________________________________________
+
 ### :hammer: How to Build: :hammer:
 
-1. Clone repo.
+1. Clone repo:
 
-2. Run "Generate Project.bat".
+```git
+  git clone https://github.com/OlleKReutercrona/RuneForge.git
+```
 
-3. Open RuneForge.sln.
+2. Run "Generate Project.bat" that is located in root
+   
+3. Initialize and update submodules:
 
-4. Press Shift+F5 to build the project.
+```git
+  git submodule init
+  git submodule update
+```
+
+4. Open RuneForge.sln
+
+5. Press F5 to build the project

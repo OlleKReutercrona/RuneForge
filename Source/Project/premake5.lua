@@ -6,15 +6,14 @@ project(PROJECT_NAME)
     language("C++")
     cppdialect(cppVersion)
     kind("WindowedApp")
-
-    dependson{ CORE_NAME, EXTERNAL_NAME }
-
-    links(LIBRARY_LIST)
-
+    
     debugdir(directories.bin)
     targetdir(directories.bin)
     targetname(PROJECT_NAME.."_%{cfg.buildcfg}")
     objdir(directories.temp.."/"..PROJECT_NAME.."/%{cfg.buildcfg}")
+    
+    dependson{ CORE_NAME, EXTERNAL_NAME }
+    links(LIBRARY_LIST)
 
     pchheader("stdafx.h")
     pchsource("pch/stdafx.cpp")
@@ -27,8 +26,7 @@ project(PROJECT_NAME)
     }
 
     includedirs {
-        directories.externalInclude,
-        directories.core,
+        directories.source,
 
         directories.project,
         directories.projectPch,
