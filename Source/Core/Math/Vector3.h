@@ -1,6 +1,5 @@
 #pragma once
 #include "Vector2.h"
-#include "Debug/DebugHelpers.h"
 
 #include <DirectXMath.h>
 #include <cmath>
@@ -61,7 +60,7 @@ struct Vector3 {
 	}
 	Vector3 &operator/=(float s) noexcept {
 
-		ASSERT_MSG(s != 0.0f, "Division by zero in Vector3::operator/=");
+		assert(s != 0.0f, "Division by zero in Vector3::operator/=");
 
 		x /= s;
 		y /= s;
@@ -77,21 +76,14 @@ struct Vector3 {
 		return a;
 	}
 	friend Vector3 operator/(Vector3 a, float s) noexcept {
-
-		ASSERT_MSG(s != 0.0f, "Division by zero in Vector3::operator/");
-
-		a /= s;
-		return a;
+		assert(s != 0.0f, "Division by zero in Vector3::operator/");
+		return Vector3(a.x / s, a.y / s, a.z / s);
 	}
 	friend Vector3 operator*(const Vector3 &a, float s) noexcept {
-		Vector3 result = a;
-		result *= s;
-		return result;
+		return Vector3(a.x * s, a.y * s, a.z * s);
 	}
 	friend Vector3 operator*(float s, const Vector3 &a) noexcept {
-		Vector3 result = a;
-		result *= s;
-		return result;
+		return Vector3(a.x * s, a.y * s, a.z * s);
 	}
 	
 	float LengthSquared() const noexcept {
@@ -118,7 +110,7 @@ struct Vector3 {
 	}
 	_NODISCARD Vector3 Reflect(const Vector3 &normal) const noexcept {
 
-		ASSERT_MSG(fabsf(normal.LengthSquared() - 1.0f) > 1e-3f, "Vector3::Reflect recieved non-normalized normal");
+		assert(fabsf(normal.LengthSquared() - 1.0f) > 1e-3f, "Vector3::Reflect recieved non-normalized normal");
 
 		Vector3 normalized = normal.Normalized();
 		return 2.0f * normalized * this->Dot(normalized) - *this;
@@ -199,17 +191,14 @@ struct Vector3i {
 		return a;
 	}
 	friend Vector3i operator*(Vector3i a, int s) noexcept {
-		a *= s;
-		return a;
+		return Vector3i(a.x * s, a.y * s, a.z * s);
 	}
 	friend Vector3i operator*(int s, Vector3i a) noexcept {
-		a *= s;
-		return a;
+		return Vector3i(a.x * s, a.y * s, a.z * s);
 	}
 	friend Vector3i operator/(Vector3i a, int s) noexcept {
 		assert(s != 0 && "Division by zero in Vector3i::operator/");
-		a /= s;
-		return a;
+		Vector3i(a.x / s, a.y / s, a.z / s);
 	}
 	friend bool operator==(const Vector3i &a, const Vector3i &b) noexcept {
 		return a.x == b.x && a.y == b.y && a.z == b.z;

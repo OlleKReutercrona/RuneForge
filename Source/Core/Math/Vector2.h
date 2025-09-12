@@ -1,6 +1,4 @@
 #pragma once
-#include "Debug/DebugHelpers.h" 
-
 #include <DirectXMath.h>
 #include <cmath>
 
@@ -56,7 +54,7 @@ struct Vector2 {
 		return *this;
 	}
 	Vector2 &operator/=(float s) noexcept {
-		ASSERT_MSG(s != 0.0f, "Division by zero in Vector2::operator/=");
+		assert(s != 0.0f, "Division by zero in Vector2::operator/=");
 		x /= s;
 		y /= s;
 		return *this;
@@ -70,14 +68,11 @@ struct Vector2 {
 		return a;
 	}
 	friend Vector2 operator/(Vector2 a, float s) noexcept {
-		ASSERT_MSG(s != 0.0f, "Division by zero in Vector2::operator/");
-		a /= s;
-		return a;
+		assert(s != 0.0f, "Division by zero in Vector2::operator/");
+		return Vector2(a.x / s, a.y / s);
 	}
 	friend Vector2 operator*(const Vector2 &a, float s) noexcept {
-		Vector2 result = a;
-		result *= s;
-		return result;
+		return Vector2(a.x * s, a.y * s);
 	}
 	friend Vector2 operator*(float s, const Vector2 &a) noexcept {
 		Vector2 result = a;
@@ -101,7 +96,7 @@ struct Vector2 {
 		return (*this) * (1.0f / sqrt(lsq));
 	}
 	_NODISCARD Vector2 Reflect(const Vector2 &normal) const noexcept {
-		ASSERT_MSG(fabsf(normal.LengthSquared() - 1.0f) > 1e-3f, "Vector2::Reflect recieved non-normalized normal");
+		assert(fabsf(normal.LengthSquared() - 1.0f) > 1e-3f, "Vector2::Reflect recieved non-normalized normal");
 		return 2.0f * normal * this->Dot(normal) - *this;
 	}
 
@@ -115,7 +110,6 @@ inline const Vector2 Vector2::UNIT_SCALE(1, 1);
 inline Vector2 Lerp(const Vector2 &a, const Vector2 &b, float t) noexcept {
 	return (a * (1.0f - t)) + (b * t);
 }
-
 
 
 
@@ -168,14 +162,12 @@ struct Vector2i {
 		a *= s;
 		return a;
 	}
-	friend Vector2i operator*(int s, Vector2i a) noexcept {
-		a *= s;
-		return a;
+	friend Vector2i operator*(Vector2i a,int s) noexcept {
+		return Vector2i(a.x * s, a.y * s);
 	}
-	friend Vector2i operator/(Vector2i a, int s) noexcept {
+	friend Vector2i operator/(int s, Vector2i a) noexcept {
 		assert(s != 0 && "Division by zero in Vector2i::operator/");
-		a /= s;
-		return a;
+		return Vector2i(a.x / s, a.y / s);
 	}
 	friend bool operator==(const Vector2i &a, const Vector2i &b) noexcept {
 		return a.x == b.x && a.y == b.y;
