@@ -26,8 +26,7 @@ project(PROJECT_NAME)
     }
 
     includedirs {
-        directories.externalInclude,
-        directories.core,
+        directories.source,
 
         directories.project,
         directories.projectPch,
