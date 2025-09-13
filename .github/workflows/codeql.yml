@@ -9,7 +9,7 @@
 # the `language` matrix defined below to confirm you have the correct set of
 # supported CodeQL languages.
 #
-name: "CodeQL Advanced"
+name: "CodeQL Advanced (Windows)"
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
     #   - https://gh.io/supported-runners-and-hardware-resources
     #   - https://gh.io/using-larger-runners (GitHub.com only)
     # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    runs-on: windows-latest
     permissions:
       # required for all workflows
       security-events: write
@@ -43,7 +43,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - language: c-cpp
+        - language: c-cppHigh
           build-mode: manual
         # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'rust', 'swift'
         # Use `c-cpp` to analyze code written in C, C++ or both
@@ -56,6 +56,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     # Add any setup steps before running the `github/codeql-action/init` action.
     # This includes steps like installing compilers or runtimes (`actions/setup-node`
@@ -76,20 +78,11 @@ jobs:
         # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
 
-    # If the analyze step fails for one of the languages you are analyzing with
-    # "We were unable to automatically build your code", modify the matrix above
-    # to set the build mode to "manual" for that language. Then modify this step
-    # to build your code.
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-    - if: matrix.build-mode == 'manual'
-      shell: bash
+    - name: Build (Premake5)
+      shell: cmd
       run: |
-        git submodule update --init --recursive
-        cd Premake
-        ./premake5.exe --file=Premake/premake5.lua vs2022 tests
+        Premake\premake5.exe --file=Premake\premake5.lua vs2022 tests
         msbuild RuneForge.sln /p:Configuration=Release
-        exit 1
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
