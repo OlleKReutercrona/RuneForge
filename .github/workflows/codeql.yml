@@ -86,7 +86,7 @@ jobs:
       shell: bash
       run: |
         git submodule update --init --recursive
-        call generate_project_with_tests.bat
+        ./generate_project_with_tests.bat
         msbuild RuneForge.sln /p:Configuration=Release
         exit 1
 
