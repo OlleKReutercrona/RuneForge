@@ -1,8 +1,7 @@
 #pragma once
-
-
 namespace RF {
     struct FrameData;
+	struct WindowCreationParams;
     class Window;
 
     struct EngineCreationParams {
@@ -27,6 +26,7 @@ namespace RF {
         void OnResize(const unsigned int width, const unsigned int height);
 
     private:
+		void LoadConfigFile(RF::WindowCreationParams& windowParams);
 
         std::unique_ptr<Window> mWindow;
 

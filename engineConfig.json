@@ -1,0 +1,17 @@
+{
+    "windowSettings": {
+        "windowSize" : {
+            "width": 1280,
+            "height": 720
+        },
+        "title": "RuneForge",
+        "startInFullscreen": false,
+        "isResizable": true,
+        "clearColor": {
+            "r": 0.2,
+            "g": 0.3,
+            "b": 0.5,
+            "a": 1.0
+        }
+    }
+}

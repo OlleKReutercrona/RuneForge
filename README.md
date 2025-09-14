@@ -1,6 +1,6 @@
 # RuneForge
 
-A project by Olle Karlson Reutercrona, Anton Eriksson and Daniel Rosén to further learn about game engines and C++. Our current end goal is to use it to build a simple vampire survivor inspired game.
+A project by Olle Karlson Reutercrona, Anton Eriksson and Daniel Rosén to further learn about game engines and C++. Our current end goal is to eventually use the engine to build a simple vampire survivor inspired game.
 
 -------------------------------------
 
@@ -43,14 +43,9 @@ ______________________________________________________
   git clone https://github.com/OlleKReutercrona/RuneForge.git
 ```
 
-2. Run "Generate Project.bat" that is located in root
+2. Run "Generate_Project.bat" that is located in root
    
-3. Initialize and update submodules:
-
-```git
-  git submodule init
-  git submodule update
-```
+       The script sets up the project and any external dependencies.
 
 4. Open RuneForge.sln
 
