@@ -4,23 +4,40 @@
 
 
 // ---------------- Vector3 (float) ---------------- //
+#pragma region Vector3Tests
 
 TEST(Vector3Tests, ConstructorAndEquality) {
+    // Default constructor
+    Vector3 v0;
+    EXPECT_FLOAT_EQ(v0.x, 0.0f);
+    EXPECT_FLOAT_EQ(v0.y, 0.0f);
+    EXPECT_FLOAT_EQ(v0.z, 0.0f);
+
+    // Parameterized constructor
     Vector3 v1(1.0f, 2.0f, 3.0f);
     EXPECT_FLOAT_EQ(v1.x, 1.0f);
     EXPECT_FLOAT_EQ(v1.y, 2.0f);
     EXPECT_FLOAT_EQ(v1.z, 3.0f);
 
-    Vector3 v2 = Vector3::Zero;
-    EXPECT_FLOAT_EQ(v2.x, 0.0f);
-    EXPECT_FLOAT_EQ(v2.y, 0.0f);
-    EXPECT_FLOAT_EQ(v2.z, 0.0f);
+    // XMFLOAT3 constructor
+    DirectX::XMFLOAT3 xf{ 4.0f, 5.0f, 6.0f };
+    Vector3 v2(xf);
+    EXPECT_FLOAT_EQ(v2.x, 4.0f);
+    EXPECT_FLOAT_EQ(v2.y, 5.0f);
+    EXPECT_FLOAT_EQ(v2.z, 6.0f);
 
+    // Array constructor
     float arr[3] = { 7.0f, 8.0f, 9.0f };
     Vector3 v3(arr);
-    EXPECT_FLOAT_EQ(v3.x, 7.0f);
-    EXPECT_FLOAT_EQ(v3.y, 8.0f);
-    EXPECT_FLOAT_EQ(v3.z, 9.0f);
+    EXPECT_FLOAT_EQ(v3.x, arr[0]);
+    EXPECT_FLOAT_EQ(v3.y, arr[1]);
+    EXPECT_FLOAT_EQ(v3.z, arr[2]);
+
+    // Zero constant
+    Vector3 vZero = Vector3::Zero;
+    EXPECT_FLOAT_EQ(vZero.x, 0.0f);
+    EXPECT_FLOAT_EQ(vZero.y, 0.0f);
+    EXPECT_FLOAT_EQ(vZero.z, 0.0f);
 }
 
 TEST(Vector3Tests, ToXMVECTORConversion) {
@@ -36,31 +53,42 @@ TEST(Vector3Tests, ToXMVECTORConversion) {
     EXPECT_FLOAT_EQ(result.w, 1.0f);
 }
 
-TEST(Vector3Tests, AdditionSubtraction) {
+TEST(Vector3Tests, ArithmeticOperators) {
     Vector3 a(1, 2, 3);
     Vector3 b(4, 5, 6);
-    Vector3 c = a + b;
-    EXPECT_FLOAT_EQ(c.x, 5);
-    EXPECT_FLOAT_EQ(c.y, 7);
-    EXPECT_FLOAT_EQ(c.z, 9);
 
+    // Addition & Subtraction
+    Vector3 c = a + b;
+    EXPECT_EQ(c, Vector3(5, 7, 9));
     Vector3 d = c - a;
-    EXPECT_FLOAT_EQ(d.x, 4);
-    EXPECT_FLOAT_EQ(d.y, 5);
-    EXPECT_FLOAT_EQ(d.z, 6);
+    EXPECT_EQ(d, b);
+
+    // Scalar Multiplication
+    Vector3 scaled = a * 2.0f;
+    EXPECT_EQ(scaled, Vector3(2, 4, 6));
+    Vector3 scaled2 = 2.0f * a;
+    EXPECT_EQ(scaled2, Vector3(2, 4, 6));
+
+    // Scalar Division
+    Vector3 divided = scaled / 2.0f;
+    EXPECT_EQ(divided, a);
 }
 
-TEST(Vector3Tests, ScalarMultiplicationDivision) {
-    Vector3 v(2, -4, 6);
-    Vector3 scaled = v * 2.0f;
-    EXPECT_FLOAT_EQ(scaled.x, 4);
-    EXPECT_FLOAT_EQ(scaled.y, -8);
-    EXPECT_FLOAT_EQ(scaled.z, 12);
+TEST(Vector3Tests, OperatorsCompoundAssignment) {
+    Vector3 a(2, 3, 4);
+    Vector3 b(1, -1, 2);
 
-    Vector3 divided = scaled / 2.0f;
-    EXPECT_FLOAT_EQ(divided.x, 2);
-    EXPECT_FLOAT_EQ(divided.y, -4);
-    EXPECT_FLOAT_EQ(divided.z, 6);
+    a += b;
+    EXPECT_EQ(a, Vector3(3, 2, 6));
+
+    a -= Vector3(1, 1, 1);
+    EXPECT_EQ(a, Vector3(2, 1, 5));
+
+    a *= 2.0f;
+    EXPECT_EQ(a, Vector3(4, 2, 10));
+
+    a /= 2.0f;
+    EXPECT_EQ(a, Vector3(2, 1, 5));
 }
 
 TEST(Vector3Tests, LengthAndLengthSquared) {
@@ -92,7 +120,7 @@ TEST(Vector3Tests, CrossProduct) {
 TEST(Vector3Tests, Normalization) {
     Vector3 v(3, 0, 4);
     Vector3 n = v.Normalized();
-    EXPECT_NEAR(n.Length(), 1.0f, 1e-6f);
+    EXPECT_NEAR(n.Length(), 1.0f, vecEpsilon);
 }
 
 TEST(Vector3Tests, Reflection) {
@@ -108,12 +136,12 @@ TEST(Vector3Tests, Rotations) {
     Vector3 v(1, 0, 0);
 
     auto yaw90 = v.RotateYaw(math::HALF_PI); // +90° yaw
-    EXPECT_NEAR(yaw90.x, 0, 1e-6f);
-    EXPECT_NEAR(yaw90.z, -1, 1e-6f);
+    EXPECT_NEAR(yaw90.x, 0, vecEpsilon);
+    EXPECT_NEAR(yaw90.z, -1, vecEpsilon);
 
     auto pitch90 = v.RotatePitch(math::HALF_PI); // +90° pitch
-    EXPECT_NEAR(pitch90.y, 0, 1e-6f); // stays 0
-    EXPECT_NEAR(pitch90.z, 0, 1e-6f); // stays 0
+    EXPECT_NEAR(pitch90.y, 0, vecEpsilon); // stays 0
+    EXPECT_NEAR(pitch90.z, 0, vecEpsilon); // stays 0
 }
 
 TEST(Vector3Tests, SubVectorAccessors) {
@@ -132,24 +160,36 @@ TEST(Vector3Tests, SubVectorAccessors) {
     EXPECT_FLOAT_EQ(yz.y, 3.0f);
 }
 
+#pragma endregion
+
 // ---------------- Vector3i (int) ---------------- //
+#pragma region Vector3iTests
 
 TEST(Vector3iTests, ConstructorAndEquality) {
+    // Default constructor
+    Vector3i v0;
+    EXPECT_EQ(v0.x, 0);
+    EXPECT_EQ(v0.y, 0);
+    EXPECT_EQ(v0.z, 0);
+
+    // Parameterized constructor
     Vector3i v1(1, 2, 3);
     EXPECT_EQ(v1.x, 1);
     EXPECT_EQ(v1.y, 2);
     EXPECT_EQ(v1.z, 3);
 
-    Vector3i v2 = Vector3i::Zero;
-    EXPECT_EQ(v2.x, 0);
-    EXPECT_EQ(v2.y, 0);
-    EXPECT_EQ(v2.z, 0);
+    // Array constructor
+    int arr[3] = { 4, 5, 6 };
+    Vector3i v2(arr);
+    EXPECT_EQ(v2.x, 4);
+    EXPECT_EQ(v2.y, 5);
+    EXPECT_EQ(v2.z, 6);
 
-    int arr[3] = { 7, 8, 9 };
-    Vector3i v(arr);
-    EXPECT_EQ(v.x, 7);
-    EXPECT_EQ(v.y, 8);
-    EXPECT_EQ(v.z, 9);
+    // Zero constant
+    Vector3i vZero = Vector3i::Zero;
+    EXPECT_EQ(vZero.x, 0);
+    EXPECT_EQ(vZero.y, 0);
+    EXPECT_EQ(vZero.z, 0);
 }
 
 TEST(Vector3iTests, ToXMVECTORConversion) {
@@ -165,31 +205,42 @@ TEST(Vector3iTests, ToXMVECTORConversion) {
     EXPECT_FLOAT_EQ(result.w, 0.0f);
 }
 
-TEST(Vector3iTests, AdditionSubtraction) {
+TEST(Vector3iTests, ArithmeticOperators) {
     Vector3i a(1, 2, 3);
     Vector3i b(4, 5, 6);
-    Vector3i c = a + b;
-    EXPECT_EQ(c.x, 5);
-    EXPECT_EQ(c.y, 7);
-    EXPECT_EQ(c.z, 9);
 
+    // Addition & Subtraction
+    Vector3i c = a + b;
+    EXPECT_EQ(c, Vector3i(5, 7, 9));
     Vector3i d = c - a;
-    EXPECT_EQ(d.x, 4);
-    EXPECT_EQ(d.y, 5);
-    EXPECT_EQ(d.z, 6);
+    EXPECT_EQ(d, b);
+
+    // Scalar Multiplication
+    Vector3i scaled = a * 2;
+    EXPECT_EQ(scaled, Vector3i(2, 4, 6));
+    Vector3i scaled2 = 2 * a;
+    EXPECT_EQ(scaled2, Vector3i(2, 4, 6));
+
+    // Scalar Division
+    Vector3i divided = scaled / 2;
+    EXPECT_EQ(divided, a);
 }
 
-TEST(Vector3iTests, ScalarMultiplicationDivision) {
-    Vector3i v(2, -4, 6);
-    Vector3i scaled = v * 2;
-    EXPECT_EQ(scaled.x, 4);
-    EXPECT_EQ(scaled.y, -8);
-    EXPECT_EQ(scaled.z, 12);
+TEST(Vector3iTests, OperatorsCompoundAssignment) {
+    Vector3i a(2, 3, 4);
+    Vector3i b(1, -1, 2);
 
-    Vector3i divided = scaled / 2;
-    EXPECT_EQ(divided.x, 2);
-    EXPECT_EQ(divided.y, -4);
-    EXPECT_EQ(divided.z, 6);
+    a += b;
+    EXPECT_EQ(a, Vector3i(3, 2, 6));
+
+    a -= Vector3i(1, 1, 1);
+    EXPECT_EQ(a, Vector3i(2, 1, 5));
+
+    a *= 2;
+    EXPECT_EQ(a, Vector3i(4, 2, 10));
+
+    a /= 2;
+    EXPECT_EQ(a, Vector3i(2, 1, 5));
 }
 
 TEST(Vector3iTests, LengthSquared) {
@@ -233,3 +284,5 @@ TEST(Vector3iTests, SubVectorAccessors) {
     EXPECT_EQ(yz.x, 2);
     EXPECT_EQ(yz.y, 3);
 }
+
+#pragma endregion

@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include <cmath>
 
+constexpr float vecEpsilon = 1e-6f;
 
 class Vector2 {
 public:
@@ -44,7 +45,7 @@ public:
         return DirectX::XMVectorSet(x, y, 0.0f, w);
     }
 
-    // Operators modifying *this //
+    // Compound Assignment Operators (modifying *this) //
 
     Vector2 &operator+=(const Vector2 &rhs) noexcept {
         x += rhs.x;
@@ -68,7 +69,7 @@ public:
         return *this;
     }
 
-    // Operators returning a copy //
+    // Arithmetic Operators (returning a copy) //
 
     friend Vector2 operator+(Vector2 a, const Vector2 &b) noexcept { 
         a += b; 
@@ -93,9 +94,9 @@ public:
     }
 
     // Comparison operators //
+
     bool operator==(const Vector2 &rhs) const noexcept {
-        constexpr float eps = 1e-6f;
-        return fabs(x - rhs.x) < eps && fabs(y - rhs.y) < eps;
+        return fabs(x - rhs.x) < vecEpsilon && fabs(y - rhs.y) < vecEpsilon;
     }
     bool operator!=(const Vector2 &rhs) const noexcept {
         return !(*this == rhs);
@@ -177,7 +178,7 @@ public:
         return DirectX::XMVectorSet(static_cast<float>(x), static_cast<float>(y), 0.0f, w);
     }
 
-    // Operators modifying *this //
+    // Compound Assignment Operators (modifying *this) //
 
     Vector2i &operator+=(const Vector2i &rhs) noexcept {
         x += rhs.x;
@@ -201,7 +202,7 @@ public:
         return *this;
     }
 
-    // Operators returning a copy //
+    // Arithmetic Operators (returning a copy) //
 
     friend Vector2i operator+(Vector2i a, const Vector2i &b) noexcept {
         a += b;

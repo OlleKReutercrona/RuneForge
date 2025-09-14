@@ -43,7 +43,7 @@ public:
         return DirectX::XMVectorSet(x, y, z, w);
     }
 
-    // Operators modifying *this //
+    // Compound Assignment Operators (modifying *this) //
 
     Vector3 &operator+=(const Vector3 &rhs) noexcept {
         x += rhs.x; y += rhs.y; z += rhs.z;
@@ -63,7 +63,7 @@ public:
         return *this;
     }
 
-    // Operators returning a copy //
+    // Arithmetic Operators (returning a copy) //
 
     friend Vector3 operator+(Vector3 a, const Vector3 &b) noexcept {
         a += b;
@@ -88,12 +88,12 @@ public:
     }
 
     // Comparison operators //
+
     bool operator==(const Vector3 &rhs) const noexcept {
-        constexpr float eps = 1e-6f;
         return
-            fabs(x - rhs.x) < eps &&
-            fabs(y - rhs.y) < eps &&
-            fabs(z - rhs.z) < eps;
+            fabs(x - rhs.x) < vecEpsilon &&
+            fabs(y - rhs.y) < vecEpsilon &&
+            fabs(z - rhs.z) < vecEpsilon;
     }
     bool operator!=(const Vector3 &rhs) const noexcept {
         return !(*this == rhs);
@@ -211,7 +211,7 @@ public:
         return DirectX::XMVectorSet(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z), w);
     }
 
-    // Operators modifying *this //
+    // Compound Assignment Operators (modifying *this) //
 
     Vector3i &operator+=(const Vector3i &rhs) noexcept { 
         x += rhs.x; y += rhs.y; z += rhs.z; return *this; 
@@ -230,7 +230,7 @@ public:
         return *this; 
     }
 
-    // Operators returning a copy //
+    // Arithmetic Operators (returning a copy) //
 
     friend Vector3i operator+(Vector3i a, const Vector3i &b) noexcept { 
         a += b; return a; 
@@ -250,8 +250,9 @@ public:
     }
 
     // Comparison operators //
+
     bool operator==(const Vector3i &rhs) const noexcept {
-        constexpr float eps = 1e-6f;
+        constexpr float eps = vecEpsilon;
         return 
             abs(x - rhs.x) < eps && 
             abs(y - rhs.y) < eps && 

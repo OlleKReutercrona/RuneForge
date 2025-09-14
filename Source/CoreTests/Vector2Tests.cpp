@@ -1,11 +1,37 @@
 #include <gtest/gtest.h>
 #include "Math/Vector2.h"
 
-TEST(Vector2Tests, ConstructorFromArray) {
-    float arr[2] = { 3.5f, -2.0f };
-    Vector2 v(arr);
-    EXPECT_FLOAT_EQ(v.x, 3.5f);
-    EXPECT_FLOAT_EQ(v.y, -2.0f);
+
+// ---------------- Vector2 (float) ---------------- //
+#pragma region Vector2Tests
+
+TEST(Vector2Tests, ConstructorAndEquality) {
+    // Default constructor
+    Vector2 v0;
+    EXPECT_FLOAT_EQ(v0.x, 0.0f);
+    EXPECT_FLOAT_EQ(v0.y, 0.0f);
+
+    // Parameterized constructor
+    Vector2 v1(1.0f, 2.0f);
+    EXPECT_FLOAT_EQ(v1.x, 1.0f);
+    EXPECT_FLOAT_EQ(v1.y, 2.0f);
+
+    // XMFLOAT2 constructor
+    DirectX::XMFLOAT2 xf{ 3.0f, 4.0f };
+    Vector2 v2(xf);
+    EXPECT_FLOAT_EQ(v2.x, 3.0f);
+    EXPECT_FLOAT_EQ(v2.y, 4.0f);
+
+    // Array constructor (if implemented)
+    float arr[2] = { 5.0f, 6.0f };
+    Vector2 v3(arr);
+    EXPECT_FLOAT_EQ(v3.x, arr[0]);
+    EXPECT_FLOAT_EQ(v3.y, arr[1]);
+
+    // Zero constant
+    Vector2 vZero = Vector2::Zero;
+    EXPECT_FLOAT_EQ(vZero.x, 0.0f);
+    EXPECT_FLOAT_EQ(vZero.y, 0.0f);
 }
 
 TEST(Vector2Tests, LengthAndLengthSquared) {
@@ -23,9 +49,9 @@ TEST(Vector2Tests, DotProduct) {
 TEST(Vector2Tests, Normalize) {
     Vector2 v(3.0f, 4.0f);
     Vector2 n = v.Normalized();
-    EXPECT_NEAR(n.Length(), 1.0f, 1e-6f);
-    EXPECT_NEAR(n.x, 0.6f, 1e-6f);
-    EXPECT_NEAR(n.y, 0.8f, 1e-6f);
+    EXPECT_NEAR(n.Length(), 1.0f, vecEpsilon);
+    EXPECT_NEAR(n.x, 0.6f, vecEpsilon);
+    EXPECT_NEAR(n.y, 0.8f, vecEpsilon);
 }
 
 TEST(Vector2Tests, Reflect) {
@@ -48,6 +74,23 @@ TEST(Vector2Tests, OperatorsArithmetic) {
     EXPECT_EQ(a / 2.0f, Vector2(1, 1.5f));
 }
 
+TEST(Vector2Tests, OperatorsCompoundAssignment) {
+    Vector2 a(2, 3);
+    Vector2 b(1, -1);
+
+    a += b;
+    EXPECT_EQ(a, Vector2(3, 2));
+
+    a -= Vector2(2, 2);
+    EXPECT_EQ(a, Vector2(1, 0));
+
+    a *= 3.0f;
+    EXPECT_EQ(a, Vector2(3, 0));
+
+    a /= 3.0f;
+    EXPECT_EQ(a, Vector2(1, 0));
+}
+
 TEST(Vector2Tests, ToXMVECTOR) {
     Vector2 v(1.5f, -2.5f);
     DirectX::XMVECTOR vec = v.ToXMVECTOR(1.0f);
@@ -59,12 +102,32 @@ TEST(Vector2Tests, ToXMVECTOR) {
     EXPECT_FLOAT_EQ(unpack.z, 0.0f);
     EXPECT_FLOAT_EQ(unpack.w, 1.0f);
 }
+#pragma endregion
 
-TEST(Vector2iTests, ConstructorFromArray) {
-    int arr[2] = { 3, -2 };
-    Vector2i v(arr);
-    EXPECT_EQ(v.x, 3);
-    EXPECT_EQ(v.y, -2);
+// ---------------- Vector2i (int) ---------------- //
+#pragma region Vector2iTests
+
+TEST(Vector2iTests, ConstructorAndEquality) {
+    // Default constructor
+    Vector2i v0;
+    EXPECT_EQ(v0.x, 0);
+    EXPECT_EQ(v0.y, 0);
+
+    // Parameterized constructor
+    Vector2i v1(1, 2);
+    EXPECT_EQ(v1.x, 1);
+    EXPECT_EQ(v1.y, 2);
+
+    // Array constructor
+    int arr[2] = { 3, 4 };
+    Vector2i v2(arr);
+    EXPECT_EQ(v2.x, 3);
+    EXPECT_EQ(v2.y, 4);
+
+    // Zero constant
+    Vector2i vZero = Vector2i::Zero;
+    EXPECT_EQ(vZero.x, 0);
+    EXPECT_EQ(vZero.y, 0);
 }
 
 TEST(Vector2iTests, DotProduct) {
@@ -83,6 +146,23 @@ TEST(Vector2iTests, OperatorsArithmetic) {
     EXPECT_EQ(a * 2, Vector2i(4, 6));
     EXPECT_EQ(2 * a, Vector2i(4, 6));
     EXPECT_EQ(a / 2, Vector2i(1, 1));
+}
+
+TEST(Vector2iTests, OperatorsCompoundAssignment) {
+    Vector2i a(2, 3);
+    Vector2i b(1, -1);
+
+    a += b;
+    EXPECT_EQ(a, Vector2i(3, 2));
+
+    a -= Vector2i(2, 2);
+    EXPECT_EQ(a, Vector2i(1, 0));
+
+    a *= 3;
+    EXPECT_EQ(a, Vector2i(3, 0));
+
+    a /= 3;
+    EXPECT_EQ(a, Vector2i(1, 0));
 }
 
 TEST(Vector2iTests, ToXMVECTOR) {
@@ -111,4 +191,4 @@ TEST(Vector2iTests, AssignFromXMINT2) {
     EXPECT_EQ(v.x, 9);
     EXPECT_EQ(v.y, -10);
 }
-
+#pragma endregion
