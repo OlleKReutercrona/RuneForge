@@ -60,6 +60,14 @@ TEST(Vector2Tests, Reflect) {
     Vector2 r = v.Reflect(n);
     EXPECT_FLOAT_EQ(r.x, 1);
     EXPECT_FLOAT_EQ(r.y, 1);
+
+    Vector2 noDiscardCache = Vector2::Zero; // just to avoid warning from [[nodiscard]]
+    Vector2 badNormal(0, 1.5f); // not normalized
+    Vector2 badNormal2(0, 0.9f); // not normalized
+
+    // Expect assert/death
+    EXPECT_DEATH({ noDiscardCache = v.Reflect(badNormal); }, "Vector3::Reflect received non-normalized normal");
+    EXPECT_DEATH({ noDiscardCache = v.Reflect(badNormal2); }, "Vector3::Reflect received non-normalized normal");
 }
 
 TEST(Vector2Tests, OperatorsArithmetic) {
@@ -72,6 +80,8 @@ TEST(Vector2Tests, OperatorsArithmetic) {
     EXPECT_EQ(a * 2.0f, Vector2(4, 6));
     EXPECT_EQ(2.0f * a, Vector2(4, 6));
     EXPECT_EQ(a / 2.0f, Vector2(1, 1.5f));
+
+    EXPECT_DEATH({ a / 0.0f; }, "Division by zero");
 }
 
 TEST(Vector2Tests, OperatorsCompoundAssignment) {
@@ -89,6 +99,8 @@ TEST(Vector2Tests, OperatorsCompoundAssignment) {
 
     a /= 3.0f;
     EXPECT_EQ(a, Vector2(1, 0));
+
+    EXPECT_DEATH({ a /= 0.0f; }, "Division by zero");
 }
 
 TEST(Vector2Tests, ToXMVECTOR) {
@@ -163,8 +175,9 @@ TEST(Vector2iTests, OperatorsCompoundAssignment) {
 
     a /= 3;
     EXPECT_EQ(a, Vector2i(1, 0));
-}
 
+    EXPECT_DEATH({ a / 0; }, "Division by zero");
+}
 TEST(Vector2iTests, ToXMVECTOR) {
     Vector2i v(3, -4);
     DirectX::XMVECTOR vec = v.ToXMVECTOR(0.0f);
@@ -175,6 +188,8 @@ TEST(Vector2iTests, ToXMVECTOR) {
     EXPECT_FLOAT_EQ(unpack.y, -4.0f);
     EXPECT_FLOAT_EQ(unpack.z, 0.0f);
     EXPECT_FLOAT_EQ(unpack.w, 0.0f);
+
+    EXPECT_DEATH({ v /= 0; }, "Division by zero");
 }
 
 TEST(Vector2iTests, ConversionToXMINT2) {

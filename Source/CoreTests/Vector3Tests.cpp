@@ -72,6 +72,8 @@ TEST(Vector3Tests, ArithmeticOperators) {
     // Scalar Division
     Vector3 divided = scaled / 2.0f;
     EXPECT_EQ(divided, a);
+
+    EXPECT_DEATH({ a /= 0.0f; }, "Division by zero");
 }
 
 TEST(Vector3Tests, OperatorsCompoundAssignment) {
@@ -89,6 +91,8 @@ TEST(Vector3Tests, OperatorsCompoundAssignment) {
 
     a /= 2.0f;
     EXPECT_EQ(a, Vector3(2, 1, 5));
+
+    EXPECT_DEATH({ a / 0.0f; }, "Division by zero");
 }
 
 TEST(Vector3Tests, LengthAndLengthSquared) {
@@ -130,6 +134,14 @@ TEST(Vector3Tests, Reflection) {
     EXPECT_FLOAT_EQ(r.x, 1);
     EXPECT_FLOAT_EQ(r.y, 1);
     EXPECT_FLOAT_EQ(r.z, 0);
+
+    Vector3 noDiscardCache = Vector3::Zero; // just to avoid warning from [[nodiscard]]
+    Vector3 badNormal(0, 1.5f, 0); // not normalized
+    Vector3 badNormal2(0, 0.9f, 0); // not normalized
+
+    // Expect assert/death
+    EXPECT_DEATH({ noDiscardCache = v.Reflect(badNormal); }, "Vector3::Reflect received non-normalized normal");
+    EXPECT_DEATH({ noDiscardCache = v.Reflect(badNormal2); }, "Vector3::Reflect received non-normalized normal");
 }
 
 TEST(Vector3Tests, Rotations) {
@@ -224,6 +236,8 @@ TEST(Vector3iTests, ArithmeticOperators) {
     // Scalar Division
     Vector3i divided = scaled / 2;
     EXPECT_EQ(divided, a);
+
+    EXPECT_DEATH({ a / 0; }, "Division by zero");
 }
 
 TEST(Vector3iTests, OperatorsCompoundAssignment) {
@@ -241,6 +255,8 @@ TEST(Vector3iTests, OperatorsCompoundAssignment) {
 
     a /= 2;
     EXPECT_EQ(a, Vector3i(2, 1, 5));
+
+    EXPECT_DEATH({ a /= 0; }, "Division by zero");
 }
 
 TEST(Vector3iTests, LengthSquared) {
