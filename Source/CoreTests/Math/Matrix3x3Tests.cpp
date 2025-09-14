@@ -515,5 +515,24 @@ namespace RFMath {
 		}
 	}
 
+	//***********************************************************************
+	TEST(Matrix3x3Tests, DivideByZero) {
+		float randomValue = testUtility.GetRandomFloat(1.0f, 10000.0f);
+		Matrix3x3 matrix1;
+		matrix1(0, 0) = randomValue;
+		matrix1(1, 1) = randomValue;
+		matrix1(2, 2) = randomValue;
+
+		EXPECT_DEATH({auto result = matrix1 / 0.0f;}, "Attempting to divide by zero");
+
+		EXPECT_DEATH({ matrix1 /= 0.0f; }, "Attempting to divide by zero");
+	}
+	//***********************************************************************
+	TEST(Matrix3x3Tests, ParenthesisOperatorOutOfBounds) {
+		Matrix3x3 matrix;
+
+		EXPECT_DEATH({ matrix(4,0) = 1.0f; }, "Matrix3x3: Index out of bounds");
+		EXPECT_DEATH({ matrix(0,4) = 1.0f; }, "Matrix3x3: Index out of bounds");
+	}
 }
 // namespace RFMath

@@ -115,10 +115,14 @@ Matrix3x3& Matrix3x3::operator*=(const float scalar) noexcept {
 }
 
 Matrix3x3 Matrix3x3::operator/(const float scalar) const noexcept {
+	assert(scalar != 0.0f && "Attempting to divide by zero");
+
 	return mMatrix / scalar;
 }
 
 Matrix3x3& Matrix3x3::operator/=(const float scalar) noexcept {
+	assert(scalar != 0.0f && "Attempting to divide by zero");
+
 	mMatrix /= scalar;
 	return *this;
 }
