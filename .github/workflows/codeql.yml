@@ -84,6 +84,10 @@ jobs:
     - name: Build (Premake5)
       shell: cmd
       run: |
+        mkdir Source\External\Include\nlohmann
+        curl -sS -L https://github.com/nlohmann/json/releases/download/v3.11.3/json.hpp -o Source/External/Include/nlohmann/json.hpp
+        curl -sS -L https://github.com/nlohmann/json/releases/download/v3.11.3/json_fwd.hpp -o Source/External/Include/nlohmann/json_fwd.hpp
+        
         Premake\premake5.exe --file=Premake\premake5.lua vs2022 tests
         msbuild RuneForge.sln /p:Configuration=Release
     - name: Perform CodeQL Analysis
