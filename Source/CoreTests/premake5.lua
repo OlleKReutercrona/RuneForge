@@ -59,10 +59,15 @@ project(NAME)
         flags {
 			"MultiProcessorCompile"
         }
+		
+		disablewarnings {
+            "4723" -- division by zero
+        }
         
         fatalwarnings {
             "All"
         }
+		
 
     links {
         "DXGI",
