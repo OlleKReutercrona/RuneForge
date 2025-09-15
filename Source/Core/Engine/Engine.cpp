@@ -23,7 +23,11 @@ RF::Engine::Engine(const RF::EngineCreationParams& params) {
 	mWindow->Init(windowParams);
 }
 
-void RF::Engine::Update(const FrameData& frameData) { frameData; }
+void RF::Engine::Update(const FrameData& frameData) { 
+	frameData; 
+
+	mInput.ResetInputState();
+}
 
 void RF::Engine::Render(const FrameData& frameData) { frameData; }
 
