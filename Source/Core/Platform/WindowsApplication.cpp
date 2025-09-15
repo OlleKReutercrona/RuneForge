@@ -37,7 +37,6 @@ int RF::WindowsApplication::Run(HINSTANCE hInstance, int cmdShow) {
 LRESULT RF::WindowsApplication::WindowProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam) {
 
 	RF::Engine* engine = reinterpret_cast<RF::Engine*>(GetWindowLongPtr(hWND, GWLP_USERDATA));
-	RF::Input &input = engine->GetInput();
 
 	switch (message) {
 		case WM_CREATE:
@@ -51,7 +50,7 @@ LRESULT RF::WindowsApplication::WindowProc(HWND hWND, UINT message, WPARAM wPara
 
 			if (engine) {
 				// Assuming Engine has a way to access its Input instance:
-				input.RegisterDevices(hWND, /*no_legacy=*/true);
+				engine->GetInput().RegisterDevices(hWND, /*no_legacy=*/false);
 			}
 
 			return 0;

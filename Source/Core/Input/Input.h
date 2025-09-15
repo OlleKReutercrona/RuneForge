@@ -25,7 +25,7 @@ namespace RF {
         void ProcessRawInput(LPARAM lParam);
 
         // Per-frame: call at start of frame (before using pressed/released)
-        void Update(); // resets per-frame state (pressed/released, zero mouse delta)
+        void ResetInputState(); // resets per-frame state (pressed/released, zero mouse delta)
 
         // Query API
         bool IsKeyDown(KeyCode vkey) const;      // currently down
@@ -102,7 +102,7 @@ namespace RF {
         return true;
     }
 
-    inline void Input::Update() {
+    inline void Input::ResetInputState() {
         // clear per-frame "pressed" / "released" but keep current state
         keyPressed.reset();
         keyReleased.reset();
