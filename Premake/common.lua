@@ -120,3 +120,4 @@ local function FindLibraries()
 end
 
 LIBRARY_LIST = FindLibraries()
+LIBRARY_LIST[#LIBRARY_LIST + 1] = CORE_NAME
