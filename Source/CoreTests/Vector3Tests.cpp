@@ -73,7 +73,7 @@ TEST(Vector3Tests, ArithmeticOperators) {
     Vector3 divided = scaled / 2.0f;
     EXPECT_EQ(divided, a);
 
-    EXPECT_DEATH({ a /= 0.0f; }, "Division by zero");
+    EXPECT_DEATH({ a /= 0.0f; }, "Division by zero in Vector3::operator/=");
 }
 
 TEST(Vector3Tests, OperatorsCompoundAssignment) {
@@ -92,7 +92,7 @@ TEST(Vector3Tests, OperatorsCompoundAssignment) {
     a /= 2.0f;
     EXPECT_EQ(a, Vector3(2, 1, 5));
 
-    EXPECT_DEATH({ a / 0.0f; }, "Division by zero");
+    EXPECT_DEATH({ a / 0.0f; }, "Division by zero in Vector3::operator/");
 }
 
 TEST(Vector3Tests, LengthAndLengthSquared) {
@@ -237,7 +237,7 @@ TEST(Vector3iTests, ArithmeticOperators) {
     Vector3i divided = scaled / 2;
     EXPECT_EQ(divided, a);
 
-    EXPECT_DEATH({ a / 0; }, "Division by zero");
+    EXPECT_DEATH({ a / 0; }, "Division by zero in Vector3i::operator/");
 }
 
 TEST(Vector3iTests, OperatorsCompoundAssignment) {
@@ -256,7 +256,7 @@ TEST(Vector3iTests, OperatorsCompoundAssignment) {
     a /= 2;
     EXPECT_EQ(a, Vector3i(2, 1, 5));
 
-    EXPECT_DEATH({ a /= 0; }, "Division by zero");
+    EXPECT_DEATH({ a /= 0; }, "Division by zero in Vector3i::operator/=");
 }
 
 TEST(Vector3iTests, LengthSquared) {
