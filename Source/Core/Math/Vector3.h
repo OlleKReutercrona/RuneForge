@@ -58,7 +58,7 @@ public:
         return *this;
     }
     Vector3 &operator/=(float s) noexcept {
-        assert(s != 0.0f && "Division by zero in Vector3::operator/=");
+        //assert(s != 0.0f && "Division by zero in Vector3::operator/=");
         x /= s; y /= s; z /= s;
         return *this;
     }
@@ -74,7 +74,7 @@ public:
         return a;
     }
     friend Vector3 operator/(Vector3 a, float s) noexcept {
-        assert(s != 0.0f && "Division by zero in Vector3::operator/");
+        //assert(s != 0.0f && "Division by zero in Vector3::operator/");
         a /= s;
         return a;
     }
@@ -124,7 +124,7 @@ public:
         );
     }
     [[nodiscard]] Vector3 Reflect(const Vector3 &normal) const noexcept {
-        assert(fabs(normal.LengthSquared() - 1.0f) < 1e-3f && "Vector3::Reflect received non-normalized normal");
+        //assert(fabs(normal.LengthSquared() - 1.0f) < 1e-3f && "Vector3::Reflect received non-normalized normal");
 
         float dot = this->Dot(normal);
         float factor = 2.0f * dot;
@@ -223,7 +223,7 @@ public:
         x *= s; y *= s; z *= s; return *this; 
     }
     Vector3i &operator/=(int s) noexcept { 
-        assert(s != 0 && "Division by zero in Vector3i::operator/=");
+        //assert(s != 0 && "Division by zero in Vector3i::operator/=");
         x /= s; 
         y /= s; 
         z /= s; 
@@ -245,7 +245,7 @@ public:
         a *= s; return a; 
     }
     friend Vector3i operator/(Vector3i a, int s) noexcept { 
-        assert(s != 0 && "Division by zero in Vector3i::operator/");
+        //assert(s != 0 && "Division by zero in Vector3i::operator/");
         a /= s; return a; 
     }
 
