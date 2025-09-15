@@ -37,24 +37,41 @@ int RF::WindowsApplication::Run(HINSTANCE hInstance, int cmdShow) {
 LRESULT RF::WindowsApplication::WindowProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam) {
 
 	RF::Engine* engine = reinterpret_cast<RF::Engine*>(GetWindowLongPtr(hWND, GWLP_USERDATA));
+	RF::Input &input = engine->GetInput();
 
 	switch (message) {
-	case WM_CREATE: {
-		// Saves the engine* passed from window constructor
-		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-		SetWindowLongPtr(hWND, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-		return 0;
-	}
-	case WM_DESTROY: {
+		case WM_CREATE:
+		{
 
-		PostQuitMessage(0);
-		return 0;
-	}
-	case WM_SIZE:
-	{
-		engine->OnResize(LOWORD(lParam), HIWORD(lParam));
-		return 0;
-	}
+			// Saves the engine* passed from window constructor
+			LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+			SetWindowLongPtr(hWND, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+
+			engine = reinterpret_cast<RF::Engine *>(pCreateStruct->lpCreateParams);
+
+			if (engine) {
+				// Assuming Engine has a way to access its Input instance:
+				input.RegisterDevices(hWND, /*no_legacy=*/true);
+			}
+
+			return 0;
+		}
+		case WM_DESTROY:
+		{
+			PostQuitMessage(0);
+			return 0;
+		}
+		case WM_SIZE:
+		{
+			engine->OnResize(LOWORD(lParam), HIWORD(lParam));
+			return 0;
+		}
+		case WM_INPUT:
+		{
+			if (engine) {
+				engine->GetInput().ProcessRawInput(lParam);
+			}
+		}
 	}
 
 	return DefWindowProc(hWND, message, wParam, lParam);
