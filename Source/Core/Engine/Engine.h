@@ -1,5 +1,6 @@
 #pragma once
 #include "Input/Input.h"
+#include "Input/InputHandler.h"
 
 namespace RF {
     struct FrameData;
@@ -27,7 +28,7 @@ namespace RF {
 
         void OnResize(const unsigned int width, const unsigned int height);
 
-        Input &GetInput() { return mInput; }
+        input::Input &GetInput() { return mRawInput; }
 
     private:
 		void LoadConfigFile(RF::WindowCreationParams& windowParams);
@@ -36,6 +37,7 @@ namespace RF {
 
         std::wstring mAssetsPath;
 
-        Input mInput;
+		input::InputHandler mInputHandler;
+        input::Input mRawInput;
     };
 }

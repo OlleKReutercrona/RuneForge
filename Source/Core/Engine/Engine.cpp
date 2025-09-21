@@ -10,7 +10,7 @@ namespace {
 	constexpr std::string_view gConfigFilePath = "../engineConfig.json";
 }
 
-RF::Engine::Engine(const RF::EngineCreationParams& params) {
+RF::Engine::Engine(const RF::EngineCreationParams& params) :mInputHandler(mRawInput) {
 	RF::WindowCreationParams windowParams;
 	windowParams.hInstance = params.hInstance;
 	windowParams.cmdShow = params.cmdShow;
@@ -21,12 +21,13 @@ RF::Engine::Engine(const RF::EngineCreationParams& params) {
 
 	mWindow = std::make_unique<RF::Window>();
 	mWindow->Init(windowParams);
+	mInputHandler.Initialize();
 }
 
 void RF::Engine::Update(const FrameData& frameData) { 
 	frameData; 
 
-	mInput.ResetInputState();
+	mInputHandler.Update();
 }
 
 void RF::Engine::Render(const FrameData& frameData) { frameData; }

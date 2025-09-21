@@ -16,6 +16,8 @@ int RF::WindowsApplication::Run(HINSTANCE hInstance, int cmdShow) {
 	MSG msg = { 0 };
 	while (msg.message != WM_QUIT) {
 
+		engine.GetInput().Update();
+
 		// Process queued messages
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
