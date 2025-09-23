@@ -88,6 +88,9 @@ namespace RF {
 			// Each unique callback ID maps to a specific event (Used for unregistration).
 			std::unordered_map<CallbackID, InputEvent> mCallbackIdToEvent = {};
 
+			// TODO, we can store key to Binds on startup
+			std::unordered_map<char, std::vector<int>> keyToBind;
+
 			KeybindHash HashKeybind(const std::vector<InputKey> &combo);
 
 			bool IsInputKeyReleased(const InputKey &key) const;

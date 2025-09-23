@@ -6,7 +6,6 @@
 namespace RF {
 	namespace input {
 
-
 #ifdef DEBUG_TEST_INPUT
 		bool on_player_jump() {
 			return true;
@@ -26,8 +25,7 @@ namespace RF {
 			keys.emplace_back(MouseKey::Left);
 			AddKeybind(keys, InputEvent::Player_Jump, InputLayer::Gameplay);
 
-
-			// Anything
+			// Anything can register a callback function to a event.
 			RegisterCallbackToEvent(InputEvent::Player_Jump, on_player_jump);
 #endif 
 		}
@@ -35,6 +33,7 @@ namespace RF {
 		// --- Events --- //
 
 		CallbackID InputHandler::RegisterCallbackToEvent(InputEvent event, std::function<bool()> callback) {
+
 
 			static CallbackID uniqueCallbackID = 0;
 

@@ -7,7 +7,6 @@ namespace RF {
 
 	namespace input {
 
-
 #define ENUM_DECLARE(name) name, // Used to convert to enum
 #define CASE_ENUM_TO_STRING(name) case InputEvent::name: return #name; // Used to convert enum to string
 #define IF_STRING_TO_ENUM(name) if(actionStrConstant == #name) return InputActionID::name; // Used to convert string to enum

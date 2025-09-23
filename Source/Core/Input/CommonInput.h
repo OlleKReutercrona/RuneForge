@@ -16,7 +16,7 @@ namespace RF {
         // Input layers
         enum class InputLayer : uint8_t {
             Gameplay,
-            GameUI,
+            UI,
             Editor,
             Count
         };
