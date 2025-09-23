@@ -6,15 +6,6 @@ namespace RF {
 		constexpr const char *INVALID_KEY_NAME = "Unknown";
 		constexpr uint32_t INVALID_KEY_CODE = 0xFFFFFFFF;
 
-		// Mouse buttons
-		enum class MouseKey : uint32_t {
-			Left = 0,
-			Right = 1,
-			Middle = 2,
-
-			Unknown = INVALID_KEY_CODE
-		};
-
 		// Gamepad buttons (example: Xbox-style)
 		enum class GamepadKey : uint32_t {
 			A = 0,
@@ -27,64 +18,121 @@ namespace RF {
 			Unknown = INVALID_KEY_CODE
 		};
 
-		enum class KeyboardKey : uint32_t {
-			// Letters
-			A = 'A',
-			B = 'B', C = 'C', D = 'D', E = 'E', F = 'F',
-			G = 'G', H = 'H', I = 'I', J = 'J', K = 'K',
-			L = 'L', M = 'M', N = 'N', O = 'O', P = 'P',
-			Q = 'Q', R = 'R', S = 'S', T = 'T', U = 'U',
-			V = 'V', W = 'W', X = 'X', Y = 'Y', Z = 'Z',
+        enum class KeyCode : uint32_t {
+            // Mouse buttons
+            MouseLeft = 0,
+            MouseRight = 1,
+            MouseMiddle = 2,
+            MouseX1 = 3,
+            MouseX2 = 4,
 
-			// Numbers
-			Num0 = 0x30, Num1 = 0x31, Num2 = 0x32, Num3 = 0x33,
-			Num4 = 0x34, Num5 = 0x35, Num6 = 0x36, Num7 = 0x37,
-			Num8 = 0x38, Num9 = 0x39,
+            // Letters
+            A = 65,
+            B = 66,
+            C = 67,
+            D = 68,
+            E = 69,
+            F = 70,
+            G = 71,
+            H = 72,
+            I = 73,
+            J = 74,
+            K = 75,
+            L = 76,
+            M = 77,
+            N = 78,
+            O = 79,
+            P = 80,
+            Q = 81,
+            R = 82,
+            S = 83,
+            T = 84,
+            U = 85,
+            V = 86,
+            W = 87,
+            X = 88,
+            Y = 89,
+            Z = 90,
 
-			// Function keys
-			F1 = 0x70, F2 = 0x71, F3 = 0x72, F4 = 0x73, F5 = 0x74,
-			F6 = 0x75, F7 = 0x76, F8 = 0x77, F9 = 0x78, F10 = 0x79,
-			F11 = 0x7A, F12 = 0x7B,
+            // Numbers
+            Num0 = 48,
+            Num1 = 49,
+            Num2 = 50,
+            Num3 = 51,
+            Num4 = 52,
+            Num5 = 53,
+            Num6 = 54,
+            Num7 = 55,
+            Num8 = 56,
+            Num9 = 57,
 
-			// Modifiers
-			LeftCtrl = 0xA2, RightCtrl = 0xA3,
-			LeftShift = 0xA0, RightShift = 0xA1,
-			LeftAlt = 0xA4, RightAlt = 0xA5,
+            // Function keys
+            F1 = 112,
+            F2 = 113,
+            F3 = 114,
+            F4 = 115,
+            F5 = 116,
+            F6 = 117,
+            F7 = 118,
+            F8 = 119,
+            F9 = 120,
+            F10 = 121,
+            F11 = 122,
+            F12 = 123,
 
-			// Special keys
-			Space = 0x20, Enter = 0x0D, Escape = 0x1B, Tab = 0x09,
-			Backspace = 0x08, UpArrow = 0x26, DownArrow = 0x28,
-			LeftArrow = 0x25, RightArrow = 0x27, CapsLock = 0x14,
-			NumLock = 0x90, ScrollLock = 0x91, PrintScreen = 0x2C,
-			Insert = 0x2D, 
-			Delete = 0x2E, Home = 0x24, End = 0x23,
-			PageUp = 0x21, 
-			PageDown = 0x22, 
-			LeftWin = 0x5B,
-			RightWin = 0x5C, 
-			Apps = 0x5D, 
-			Sleep = 0x5F,
+            // Modifiers
+            LeftCtrl = 162,
+            RightCtrl = 163,
+            LeftShift = 160,
+            RightShift = 161,
+            LeftAlt = 164,
+            RightAlt = 165,
 
-			// Numpad keys
-			Numpad0 = 0x60,
-			Numpad1 = 0x61, 
-			Numpad2 = 0x62,
-			Numpad3 = 0x63,
-			Numpad4 = 0x64, 
-			Numpad5 = 0x65,
-			Numpad6 = 0x66,
-			Numpad7 = 0x67, 
-			Numpad8 = 0x68,
-			Numpad9 = 0x69,
-			NumpadMultiply = 0x6A,
-			NumpadAdd = 0x6B,
-			NumpadSeparator = 0x6C,
-			NumpadSubtract = 0x6D,
-			NumpadDecimal = 0x6E,
-			NumpadDivide = 0x6F,
+            // Special keys
+            Space = 32,
+            Enter = 13,
+            Escape = 27,
+            Tab = 9,
+            Backspace = 8,
+            UpArrow = 38,
+            DownArrow = 40,
+            LeftArrow = 37,
+            RightArrow = 39,
+            CapsLock = 20,
+            NumLock = 144,
+            ScrollLock = 145,
+            PrintScreen = 44,
+            Insert = 45,
+            Delete = 46,
+            Home = 36,
+            End = 35,
+            PageUp = 33,
+            PageDown = 34,
+            LeftWin = 91,
+            RightWin = 92,
+            Apps = 93,
+            Sleep = 95,
 
-			Unknown = INVALID_KEY_CODE
-		};
+            // Numpad keys
+            Numpad0 = 96,
+            Numpad1 = 97,
+            Numpad2 = 98,
+            Numpad3 = 99,
+            Numpad4 = 100,
+            Numpad5 = 101,
+            Numpad6 = 102,
+            Numpad7 = 103,
+            Numpad8 = 104,
+            Numpad9 = 105,
+            NumpadMultiply = 106,
+            NumpadAdd = 107,
+            NumpadSeparator = 108,
+            NumpadSubtract = 109,
+            NumpadDecimal = 110,
+            NumpadDivide = 111,
+
+            Count = INVALID_KEY_CODE
+        };
 
 	}
 }

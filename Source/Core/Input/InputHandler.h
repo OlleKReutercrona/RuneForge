@@ -5,29 +5,17 @@
 namespace RF {
 	namespace input {
 
-		enum class KeybindState {
-			Idle,
-			Pressed,
-			Down,
-			Released,
-		};
+		using KeyMask = std::bitset<MAX_KEYS>;
 
-		struct InputKey {
-			InputDevice device = InputDevice::NotSet;
-			uint32_t code;
-
-			InputKey(KeyboardKey k) : device(InputDevice::Keyboard), code(static_cast<uint32_t>(k)) {}
-			InputKey(MouseKey m) : device(InputDevice::Mouse), code(static_cast<uint32_t>(m)) {}
-			InputKey(GamepadKey g) : device(InputDevice::Gamepad), code(static_cast<uint32_t>(g)) {}
-		};
-
+		// A Keybind needs to store 2 bitsets due to key combo orders, i.e: Space + MouseKey is not the same as Mousekey + Space.
+		// Reason is the first key needs to be DOWN and the last key PRESSED this frame / tick.
 		struct Keybind {
 			KeybindHash hash = INVALID_KEYBIND_HASH;
-			std::vector<InputKey> keys = {};
-			KeybindState state = KeybindState::Idle;
+			KeyMask downMask;   // All keys that must be held down (except last key in combo)
+			KeyMask pressMask;  // The key that must be newly pressed to trigger
 
 			Keybind() = default;
-			Keybind(const KeybindHash keybindHash, const std::vector<InputKey> &keys) : keys(keys), hash(keybindHash) {}
+			Keybind(const KeybindHash keybindHash) : hash(keybindHash) {}
 		};
 
 		class InputHandler {
@@ -42,19 +30,22 @@ namespace RF {
 
 			// --- Keybinds --- //
 
-			void AddKeybind(const std::vector<InputKey> &keyCombination, InputEvent id, InputLayer layer);
+			void AddKeybind(const std::vector<KeyCode> &keyCombination, InputEvent id, InputLayer layer);
 			void RemoveKeybind(KeybindHash hash);
 
-			// --- Updates --- //
+			// --- Input Notify --- //
 
-			void Update();
-			void UpdateKeybindState(Keybind &bind, bool pressed);
+			void OnKeybindTriggered(KeyCode key);
 
 			// --- Polling --- //
 
-			bool IsActionPressed(InputEvent id) const;
-			bool IsActionReleased(InputEvent id) const;
-			bool IsActionDown(InputEvent id) const;
+			bool IsActionPressed(InputEvent event) const;
+			bool IsActionDown(InputEvent event) const;
+			bool IsActionReleased(InputEvent event) const;
+
+			bool IsKeyPressed(KeyCode key) const;
+			bool IsKeyDown(KeyCode key) const;
+			bool IsKeyReleased(KeyCode key) const;
 
 			// --- Helpers --- //
 
@@ -89,17 +80,14 @@ namespace RF {
 			std::unordered_map<CallbackID, InputEvent> mCallbackIdToEvent = {};
 
 			// TODO, we can store key to Binds on startup
-			std::unordered_map<char, std::vector<int>> keyToBind;
+			std::unordered_map<KeyCode, std::vector<int>> mKeyToBind;
 
-			KeybindHash HashKeybind(const std::vector<InputKey> &combo);
+			KeybindHash HashKeybind(const std::vector<KeyCode> &keys);
+			std::bitset<MAX_KEYS> GenerateNotifyMask(std::vector<Keybind> keybinds);
 
-			bool IsInputKeyReleased(const InputKey &key) const;
-			bool IsInputKeyDown(const InputKey &key) const;
-			bool IsInputKeyPressed(const InputKey &key) const;
-
-			bool IsKeybindPressed(const std::vector<InputKey> &keys) const;
-			bool IsKeybindDown(const std::vector<InputKey> &keys) const;
-			bool IsKeybindReleased(const std::vector<InputKey> &keys) const;
+			bool IsKeybindPressed(const Keybind &keybind) const;
+			bool IsKeybindDown(const Keybind &keybind) const;
+			bool IsKeybindReleased(const Keybind &keybind) const;
 		};
 	}
 }

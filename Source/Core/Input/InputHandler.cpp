@@ -8,7 +8,7 @@ namespace RF {
 
 #ifdef DEBUG_TEST_INPUT
 		bool on_player_jump() {
-			return true;
+ 			return true;
 		}
 #endif
 
@@ -20,14 +20,86 @@ namespace RF {
 			mActiveLayer = InputLayer::Gameplay;
 
 			// This will be added through parsing the Keybind Config later.
-			std::vector<InputKey> keys;
-			keys.emplace_back(KeyboardKey::Space);
-			keys.emplace_back(MouseKey::Left);
+			std::vector<KeyCode> keys;
+			//keys.emplace_back(KeyCode::Space);
+			keys.emplace_back(KeyCode::Space);
+			keys.emplace_back(KeyCode::MouseLeft);
 			AddKeybind(keys, InputEvent::Player_Jump, InputLayer::Gameplay);
 
 			// Anything can register a callback function to a event.
 			RegisterCallbackToEvent(InputEvent::Player_Jump, on_player_jump);
 #endif 
+
+			// OBS: This has to be done after we parsed keybinds
+			// AND: When we rebind keybinds.
+
+			std::bitset<MAX_KEYS> notifyMask = GenerateNotifyMask(mKeyBinds);
+
+			mInput.SetNotifyMask(notifyMask);
+			mInput.SetNotifyFunc([this](KeyCode key) {
+				this->OnKeybindTriggered(key);
+			});
+		}
+
+		// --- Keybinds --- //
+
+		void InputHandler::AddKeybind(const std::vector<KeyCode> &keyCombination, InputEvent eventId, InputLayer layer) {
+			if (keyCombination.empty()) return;
+
+			// Generate hash for this combination
+			KeybindHash hash = HashKeybind(keyCombination);
+
+			// Check if keybind already exists
+			auto it = std::find_if(mKeyBinds.begin(), mKeyBinds.end(), [&](const Keybind &kb) { return kb.hash == hash; });
+			bool notFound = it == mKeyBinds.end();
+
+			if (notFound) {
+
+				// Convert keyCombination into a KeyMask
+				Keybind &newKeybind = mKeyBinds.emplace_back(hash);
+				int keybindIndex = static_cast<int>(mKeyBinds.size() - 1);
+
+				// All keys except the last are "held down"
+				for (size_t i = 0; i + 1 < keyCombination.size(); ++i) {
+					newKeybind.downMask.set(static_cast<size_t>(keyCombination[i]));
+				}
+
+				// The last key is the "press" key
+				newKeybind.pressMask.set(static_cast<size_t>(keyCombination.back()));
+
+				// Map the keybind to each keycode.
+				for (const KeyCode &keycode : keyCombination) {
+					mKeyToBind[keycode].emplace_back(keybindIndex);
+				}
+
+				// Map hash to index
+				mKeybindHashToKeybindIndex[hash] = static_cast<int>(mKeyBinds.size() - 1);
+
+				// Map event to hash
+				mActionToKeybindHash[(int)eventId] = hash;
+
+				// Map hash + layer to event
+				mKeyhashToLayerEvent[hash][static_cast<int>(layer)] = eventId;
+			} else {
+				// If keybind exists, just update the layer/event mapping
+				mActionToKeybindHash[(int)eventId] = hash;
+				mKeyhashToLayerEvent[hash][static_cast<int>(layer)] = eventId;
+			}
+		}
+		void InputHandler::RemoveKeybind(KeybindHash hash) {
+
+			// Removes all the events associated with this keybind.
+			mKeyhashToLayerEvent.erase(hash);
+
+			// Removes the Keybind.
+			auto it = mKeybindHashToKeybindIndex.find(hash);
+			if (it != mKeybindHashToKeybindIndex.end()) {
+				int index = mKeybindHashToKeybindIndex.at(hash);
+				mKeyBinds.erase(mKeyBinds.begin() + index);
+			}
+
+			// Removes the hash for index lookup.
+			mKeybindHashToKeybindIndex.erase(hash);
 		}
 
 		// --- Events --- //
@@ -79,99 +151,23 @@ namespace RF {
 			return true;
 		}
 
-		// --- Keybinds --- //
+		// --- Input Notify --- //
 
-		void InputHandler::AddKeybind(const std::vector<InputKey> &keyCombination, InputEvent eventId, InputLayer layer) {
-			if (keyCombination.empty()) return;
+		void InputHandler::OnKeybindTriggered(KeyCode key) {
 
-			KeybindHash hash = HashKeybind(keyCombination);
+			if (mKeyToBind.find(key) == mKeyToBind.end()) { return; }
 
-			// Store the keybind if it’s new
-			auto it = std::find_if(mKeyBinds.begin(), mKeyBinds.end(), [&](const Keybind &kb) { return kb.hash == hash; });
-			bool newKeybind = it == mKeyBinds.end();
+			for (int keybindIndex: mKeyToBind.at(key)) {
 
-			if (newKeybind) {
+				const Keybind &keybind = mKeyBinds[keybindIndex];
 
-				mKeyBinds.emplace_back(Keybind(hash, keyCombination));
+				if (!IsKeybindPressed(keybind)) { continue; }
 
-				mKeybindHashToKeybindIndex[hash] = (int)(mKeyBinds.size() - 1); // Map the 'hash' to the actual Keybind index.
-				mActionToKeybindHash[(int)eventId] = hash; // Map the Event on 'layer' to 'hash'
-				mKeyhashToLayerEvent[hash][(int)layer] = eventId;				// Map the 'hash' on 'layer' to 'event'
-
-			} else {
-
-				// TODO -> Ensure we do not overrite anything here!
-				mActionToKeybindHash[(int)eventId] = hash; // Map the Event on 'layer' to 'hash'
-
-				// TODO -> Ensure we do not overrite anything here!
-				mKeyhashToLayerEvent[hash][(int)layer] = eventId;			// Map the 'hash' on 'layer' to 'event'
-			}
-		}
-		void InputHandler::RemoveKeybind(KeybindHash hash) {
-
-			// Removes all the events associated with this keybind.
-			mKeyhashToLayerEvent.erase(hash);
-
-			// Removes the Keybind.
-			auto it = mKeybindHashToKeybindIndex.find(hash);
-			if (it != mKeybindHashToKeybindIndex.end()) {
-				int index = mKeybindHashToKeybindIndex.at(hash);
-				mKeyBinds.erase(mKeyBinds.begin() + index);
-			}
-
-			// Removes the hash for index lookup.
-			mKeybindHashToKeybindIndex.erase(hash);
-		}
-
-		// --- Updates --- //
-
-		void InputHandler::Update() {
-
-			if (mActiveLayer == InputLayer::Count) {
-				return; // Cannot process callbacks without valid layer.
-			}
-
-			// Go through all keybinds.
-			for (Keybind &bind : mKeyBinds) {
-
-				bool pressed = IsKeybindPressed(bind.keys);
-
-				// Update binding state.
-				UpdateKeybindState(bind, pressed);
-
-				// Skip is not pressed (for now, might want to support OnRelease etc later).
-				if (!pressed) { continue; }
-
-				auto it = mKeyhashToLayerEvent.find(bind.hash);
+				auto it = mKeyhashToLayerEvent.find(keybind.hash);
 				if (it == mKeyhashToLayerEvent.end()) { continue; }
 
 				const InputEvent boundEvent = it->second[(int)mActiveLayer];
 				FireEvent(boundEvent);
-			}
-		}
-		void InputHandler::UpdateKeybindState(Keybind &bind, bool pressed) {
-
-			switch (bind.state) {
-				case KeybindState::Idle:
-				{
-					if (pressed) {
-						bind.state = KeybindState::Pressed;
-					}
-				} break;
-				case KeybindState::Pressed:
-				{
-					bind.state = pressed ? KeybindState::Down : KeybindState::Released;
-				} break;
-				case KeybindState::Down:
-				{
-					if (!pressed) {
-						bind.state = KeybindState::Released;
-					}
-				} break;
-				case KeybindState::Released:
-				{
-					bind.state = pressed ? KeybindState::Pressed : KeybindState::Idle;
-				} break;
 			}
 		}
 
@@ -188,9 +184,9 @@ namespace RF {
 			int keybindIndex = mKeybindHashToKeybindIndex.at(hash);
 			const Keybind &bind = mKeyBinds[keybindIndex];
 
-			return bind.state == KeybindState::Pressed;
+			return IsKeybindPressed(bind);
 		}
-		bool InputHandler::IsActionReleased(InputEvent id) const {
+		bool InputHandler::IsActionDown(InputEvent event) const {
 			const KeybindHash &hash = mActionToKeybindHash[(int)id];
 
 			// Check if there's a keybind for the Action
@@ -199,9 +195,9 @@ namespace RF {
 			int keybindIndex = mKeybindHashToKeybindIndex.at(hash);
 			const Keybind &bind = mKeyBinds[keybindIndex];
 
-			return bind.state == KeybindState::Released;
+			return IsKeybindDown(bind);
 		}
-		bool InputHandler::IsActionDown(InputEvent id) const {
+		bool InputHandler::IsActionReleased(InputEvent event) const {
 			const KeybindHash &hash = mActionToKeybindHash[(int)id];
 
 			// Check if there's a keybind for the Action
@@ -210,7 +206,17 @@ namespace RF {
 			int keybindIndex = mKeybindHashToKeybindIndex.at(hash);
 			const Keybind &bind = mKeyBinds[keybindIndex];
 
-			return bind.state == KeybindState::Down;
+			return IsKeybindReleased(bind);
+		}
+
+		bool InputHandler::IsKeyPressed(KeyCode key) const {
+			return mInput.IsKeyPressed(key);
+		}
+		bool InputHandler::IsKeyDown(KeyCode key) const {
+			return mInput.IsKeyDown(key);
+		}
+		bool InputHandler::IsKeyReleased(KeyCode key) const {
+			return mInput.IsKeyReleased(key);
 		}
 
 		// --- Helpers --- //
@@ -226,6 +232,7 @@ namespace RF {
 			for (EventCallback &cb : mEventCallbacks[event]) {
 				if (!cb.callback) { continue; } // Failsafe
 				cb.callback();
+				// TODO: Handle return value!
 			}
 
 			return true;
@@ -233,58 +240,43 @@ namespace RF {
 
 		// --- Private helper functions --- //
 
-		bool InputHandler::IsInputKeyPressed(const InputKey &key) const {
-			switch (key.device) {
-				case InputDevice::Keyboard: return mInput.IsKeyPressed(static_cast<KeyCode>(key.code));
-				case InputDevice::Mouse:    return mInput.IsMouseButtonPressed(key.code);
-				case InputDevice::Gamepad:  /* TODO: gamepad */ return false;
-				default: return false;
-			}
-		}
-		bool InputHandler::IsInputKeyDown(const InputKey &key) const {
-			switch (key.device) {
-				case InputDevice::Keyboard: return mInput.IsKeyDown(static_cast<KeyCode>(key.code));
-				case InputDevice::Mouse:    return mInput.IsMouseButtonDown(key.code);
-				case InputDevice::Gamepad:  /* TODO: gamepad */ return false;
-				default: return false;
-			}
-		}
-		bool InputHandler::IsInputKeyReleased(const InputKey &key) const {
-			switch (key.device) {
-				case InputDevice::Keyboard: return mInput.IsKeyReleased(static_cast<KeyCode>(key.code));
-				case InputDevice::Mouse:    return mInput.IsMouseButtonReleased(key.code);
-				case InputDevice::Gamepad:  /* TODO: gamepad */ return false;
-				default: return false;
-			}
+		bool InputHandler::IsKeybindPressed(const Keybind &keybind) const {
+			return ((keybind.downMask & mInput.keyCurrent) == keybind.downMask) &&
+				((keybind.pressMask & mInput.keyPressed) == keybind.pressMask);
 		}
 
-		bool InputHandler::IsKeybindPressed(const std::vector<InputKey> &keys) const {
-			if (keys.empty()) return false;
-
-			for (size_t i = 0; i + 1 < keys.size(); ++i) {
-				if (!IsInputKeyDown(keys[i])) return false;
-			}
-			return IsInputKeyPressed(keys.back());
-		}
-		bool InputHandler::IsKeybindDown(const std::vector<InputKey> &keys) const {
-			for (const auto &b : keys) {
-				if (!IsInputKeyDown(b)) return false;
-			}
-			return true;
-		}
-		bool InputHandler::IsKeybindReleased(const std::vector<InputKey> &keys) const {
-			if (keys.empty()) return false;
-			return IsInputKeyReleased(keys.back());
+		bool InputHandler::IsKeybindDown(const Keybind &keybind) const {
+			KeyMask combinedMask = keybind.downMask | keybind.pressMask;
+			return (combinedMask & mInput.keyCurrent) == combinedMask;
 		}
 
-		KeybindHash InputHandler::HashKeybind(const std::vector<InputKey> &combo) {
-			std::hash<int> h;
-			KeybindHash result = INVALID_KEYBIND_HASH;
-			for (const auto &key : combo) {
-				// Mix device + code into the hash
-				result ^= (h((int)key.device) ^ (h(key.code) << 1)) + 0x9e3779b97f4a7c15ULL + (result << 6) + (result >> 2);
+		bool InputHandler::IsKeybindReleased(const Keybind &keybind) const {
+			return (keybind.pressMask & mInput.keyReleased) == keybind.pressMask;
+		}
+
+		std::bitset<MAX_KEYS> InputHandler::GenerateNotifyMask(std::vector<Keybind> keybinds) {
+
+			std::bitset<MAX_KEYS> result;
+
+			for (const Keybind &bind : keybinds) {
+				result |= bind.downMask;
+				result |= bind.pressMask;
 			}
+
 			return result;
 		}
+
+		KeybindHash InputHandler::HashKeybind(const std::vector<KeyCode> &keys) {
+			std::hash<int> h;
+			KeybindHash result = INVALID_KEYBIND_HASH;
+
+			for (const auto &key : keys) {
+				// Mix the KeyCode value into the hash
+				result ^= h(static_cast<int>(key)) + 0x9e3779b97f4a7c15ULL + (result << 6) + (result >> 2);
+			}
+
+			return result;
+		}
+
 	}
 }

@@ -5,183 +5,185 @@
 namespace RF {
 	namespace input {
 
-		using KeyCode = uint16_t; 
-        using CallbackID = int;     // Unique ID for a callback function
-        using KeybindHash = size_t; // Unique ID for a key combination on device X
-        using CallbackFunction = std::function<bool>;
-        
-        constexpr CallbackID INVALID_CALLBACK_ID = 0;
-        constexpr KeybindHash INVALID_KEYBIND_HASH = ULONG_MAX;
+		constexpr int MAX_KEYS = 256;
 
-        // Input layers
-        enum class InputLayer : uint8_t {
-            Gameplay,
-            UI,
-            Editor,
-            Count
-        };
+		//using KeyCode = uint16_t; 
+		using CallbackID = int;     // Unique ID for a callback function
+		using KeybindHash = size_t; // Unique ID for a key combination on device X
+		using CallbackFunction = std::function<bool>;
 
-        // Device types for input
-        enum class InputDevice : uint8_t {
-            Keyboard,
-            Mouse,
-            Gamepad,
-            NotSet
-        };
+		constexpr CallbackID INVALID_CALLBACK_ID = 0;
+		constexpr KeybindHash INVALID_KEYBIND_HASH = ULONG_MAX;
 
-        struct EventCallback {
-            EventCallback(int cbid, std::function<bool()> cb) : 
-                uniqueId(cbid), 
-                callback(cb) {
-            }
+		// Input layers
+		enum class InputLayer : uint8_t {
+			Gameplay,
+			UI,
+			Editor,
+			Count
+		};
 
-            CallbackID uniqueId = INVALID_CALLBACK_ID;
-            std::function<bool()> callback = nullptr;
-        };
+		// Device types for input
+		enum class InputDevice : uint8_t {
+			KeyboardAndMouse,
+			Gamepad,
+			NotSet
+		};
 
-        // --- Enum Conversions --- //
+		struct EventCallback {
+			EventCallback(int cbid, std::function<bool()> cb) :
+				uniqueId(cbid),
+				callback(cb) {
+			}
 
-        inline KeyboardKey StringToKeyboardKey(const std::string &str) {
-            static const std::unordered_map<std::string, KeyboardKey> map = {
-                // Letters
-                {"A", KeyboardKey::A}, {"B", KeyboardKey::B}, {"C", KeyboardKey::C}, {"D", KeyboardKey::D},
-                {"E", KeyboardKey::E}, {"F", KeyboardKey::F}, {"G", KeyboardKey::G}, {"H", KeyboardKey::H},
-                {"I", KeyboardKey::I}, {"J", KeyboardKey::J}, {"K", KeyboardKey::K}, {"L", KeyboardKey::L},
-                {"M", KeyboardKey::M}, {"N", KeyboardKey::N}, {"O", KeyboardKey::O}, {"P", KeyboardKey::P},
-                {"Q", KeyboardKey::Q}, {"R", KeyboardKey::R}, {"S", KeyboardKey::S}, {"T", KeyboardKey::T},
-                {"U", KeyboardKey::U}, {"V", KeyboardKey::V}, {"W", KeyboardKey::W}, {"X", KeyboardKey::X},
-                {"Y", KeyboardKey::Y}, {"Z", KeyboardKey::Z},
+			CallbackID uniqueId = INVALID_CALLBACK_ID;
+			std::function<bool()> callback = nullptr;
+		};
 
-                // Numbers
-                {"0", KeyboardKey::Num0}, {"1", KeyboardKey::Num1}, {"2", KeyboardKey::Num2},
-                {"3", KeyboardKey::Num3}, {"4", KeyboardKey::Num4}, {"5", KeyboardKey::Num5},
-                {"6", KeyboardKey::Num6}, {"7", KeyboardKey::Num7}, {"8", KeyboardKey::Num8},
-                {"9", KeyboardKey::Num9},
+		// --- Enum Conversions --- //
 
-                // Function keys
-                {"F1", KeyboardKey::F1}, {"F2", KeyboardKey::F2}, {"F3", KeyboardKey::F3}, {"F4", KeyboardKey::F4},
-                {"F5", KeyboardKey::F5}, {"F6", KeyboardKey::F6}, {"F7", KeyboardKey::F7}, {"F8", KeyboardKey::F8},
-                {"F9", KeyboardKey::F9}, {"F10", KeyboardKey::F10}, {"F11", KeyboardKey::F11}, {"F12", KeyboardKey::F12},
+		inline KeyCode StringToKeyCode(const std::string &str) {
+			static const std::unordered_map<std::string, KeyCode> map = {
+				// Mouse
+				{"MouseLeft", KeyCode::MouseLeft},
+				{"MouseRight", KeyCode::MouseRight},
+				{"MouseMiddle", KeyCode::MouseMiddle},
+				{"MouseX1", KeyCode::MouseX1},
+				{"MouseX2", KeyCode::MouseX2},
 
-                // Modifiers
-                {"LeftCtrl", KeyboardKey::LeftCtrl}, {"RightCtrl", KeyboardKey::RightCtrl},
-                {"LeftShift", KeyboardKey::LeftShift}, {"RightShift", KeyboardKey::RightShift},
-                {"LeftAlt", KeyboardKey::LeftAlt}, {"RightAlt", KeyboardKey::RightAlt},
+				// Letters
+				{"A", KeyCode::A}, {"B", KeyCode::B}, {"C", KeyCode::C}, {"D", KeyCode::D},
+				{"E", KeyCode::E}, {"F", KeyCode::F}, {"G", KeyCode::G}, {"H", KeyCode::H},
+				{"I", KeyCode::I}, {"J", KeyCode::J}, {"K", KeyCode::K}, {"L", KeyCode::L},
+				{"M", KeyCode::M}, {"N", KeyCode::N}, {"O", KeyCode::O}, {"P", KeyCode::P},
+				{"Q", KeyCode::Q}, {"R", KeyCode::R}, {"S", KeyCode::S}, {"T", KeyCode::T},
+				{"U", KeyCode::U}, {"V", KeyCode::V}, {"W", KeyCode::W}, {"X", KeyCode::X},
+				{"Y", KeyCode::Y}, {"Z", KeyCode::Z},
 
-                // Special keys
-                {"Space", KeyboardKey::Space}, {"Enter", KeyboardKey::Enter}, {"Escape", KeyboardKey::Escape},
-                {"Tab", KeyboardKey::Tab}, {"Backspace", KeyboardKey::Backspace},
-                {"UpArrow", KeyboardKey::UpArrow}, {"DownArrow", KeyboardKey::DownArrow},
-                {"LeftArrow", KeyboardKey::LeftArrow}, {"RightArrow", KeyboardKey::RightArrow},
-                {"CapsLock", KeyboardKey::CapsLock}, {"NumLock", KeyboardKey::NumLock},
-                {"ScrollLock", KeyboardKey::ScrollLock}, {"PrintScreen", KeyboardKey::PrintScreen},
-                {"Insert", KeyboardKey::Insert}, {"Delete", KeyboardKey::Delete},
-                {"Home", KeyboardKey::Home}, {"End", KeyboardKey::End},
-                {"PageUp", KeyboardKey::PageUp}, {"PageDown", KeyboardKey::PageDown},
-                {"LeftWin", KeyboardKey::LeftWin}, {"RightWin", KeyboardKey::RightWin},
-                {"Apps", KeyboardKey::Apps}, {"Sleep", KeyboardKey::Sleep},
+				// Numbers
+				{"0", KeyCode::Num0}, {"1", KeyCode::Num1}, {"2", KeyCode::Num2},
+				{"3", KeyCode::Num3}, {"4", KeyCode::Num4}, {"5", KeyCode::Num5},
+				{"6", KeyCode::Num6}, {"7", KeyCode::Num7}, {"8", KeyCode::Num8},
+				{"9", KeyCode::Num9},
 
-                // Numpad
-                {"Numpad0", KeyboardKey::Numpad0}, {"Numpad1", KeyboardKey::Numpad1}, {"Numpad2", KeyboardKey::Numpad2},
-                {"Numpad3", KeyboardKey::Numpad3}, {"Numpad4", KeyboardKey::Numpad4}, {"Numpad5", KeyboardKey::Numpad5},
-                {"Numpad6", KeyboardKey::Numpad6}, {"Numpad7", KeyboardKey::Numpad7}, {"Numpad8", KeyboardKey::Numpad8},
-                {"Numpad9", KeyboardKey::Numpad9}, {"NumpadMultiply", KeyboardKey::NumpadMultiply},
-                {"NumpadAdd", KeyboardKey::NumpadAdd}, {"NumpadSeparator", KeyboardKey::NumpadSeparator},
-                {"NumpadSubtract", KeyboardKey::NumpadSubtract}, {"NumpadDecimal", KeyboardKey::NumpadDecimal},
-                {"NumpadDivide", KeyboardKey::NumpadDivide}
-            };
+				// Function keys
+				{"F1", KeyCode::F1}, {"F2", KeyCode::F2}, {"F3", KeyCode::F3}, {"F4", KeyCode::F4},
+				{"F5", KeyCode::F5}, {"F6", KeyCode::F6}, {"F7", KeyCode::F7}, {"F8", KeyCode::F8},
+				{"F9", KeyCode::F9}, {"F10", KeyCode::F10}, {"F11", KeyCode::F11}, {"F12", KeyCode::F12},
 
-            auto it = map.find(str);
-            return it != map.end() ? it->second : KeyboardKey::Unknown;
-        }
-        inline const char *KeyToString(KeyboardKey key) {
-            switch (key) {
-                case KeyboardKey::A: return "A"; case KeyboardKey::B: return "B";
-                case KeyboardKey::C: return "C"; case KeyboardKey::D: return "D";
-                case KeyboardKey::E: return "E"; case KeyboardKey::F: return "F";
-                case KeyboardKey::G: return "G"; case KeyboardKey::H: return "H";
-                case KeyboardKey::I: return "I"; case KeyboardKey::J: return "J";
-                case KeyboardKey::K: return "K"; case KeyboardKey::L: return "L";
-                case KeyboardKey::M: return "M"; case KeyboardKey::N: return "N";
-                case KeyboardKey::O: return "O"; case KeyboardKey::P: return "P";
-                case KeyboardKey::Q: return "Q"; case KeyboardKey::R: return "R";
-                case KeyboardKey::S: return "S"; case KeyboardKey::T: return "T";
-                case KeyboardKey::U: return "U"; case KeyboardKey::V: return "V";
-                case KeyboardKey::W: return "W"; case KeyboardKey::X: return "X";
-                case KeyboardKey::Y: return "Y"; case KeyboardKey::Z: return "Z";
-                case KeyboardKey::Num0: return "0"; case KeyboardKey::Num1: return "1";
-                case KeyboardKey::Num2: return "2"; case KeyboardKey::Num3: return "3";
-                case KeyboardKey::Num4: return "4"; case KeyboardKey::Num5: return "5";
-                case KeyboardKey::Num6: return "6"; case KeyboardKey::Num7: return "7";
-                case KeyboardKey::Num8: return "8"; case KeyboardKey::Num9: return "9";
-                case KeyboardKey::F1: return "F1"; case KeyboardKey::F2: return "F2";
-                case KeyboardKey::F3: return "F3"; case KeyboardKey::F4: return "F4";
-                case KeyboardKey::F5: return "F5"; case KeyboardKey::F6: return "F6";
-                case KeyboardKey::F7: return "F7"; case KeyboardKey::F8: return "F8";
-                case KeyboardKey::F9: return "F9"; case KeyboardKey::F10: return "F10";
-                case KeyboardKey::F11: return "F11"; case KeyboardKey::F12: return "F12";
-                case KeyboardKey::LeftCtrl: return "LeftCtrl"; case KeyboardKey::RightCtrl: return "RightCtrl";
-                case KeyboardKey::LeftShift: return "LeftShift"; case KeyboardKey::RightShift: return "RightShift";
-                case KeyboardKey::LeftAlt: return "LeftAlt"; case KeyboardKey::RightAlt: return "RightAlt";
-                case KeyboardKey::Space: return "Space"; case KeyboardKey::Enter: return "Enter";
-                case KeyboardKey::Escape: return "Escape"; case KeyboardKey::Tab: return "Tab";
-                case KeyboardKey::Backspace: return "Backspace"; case KeyboardKey::UpArrow: return "UpArrow";
-                case KeyboardKey::DownArrow: return "DownArrow"; case KeyboardKey::LeftArrow: return "LeftArrow";
-                case KeyboardKey::RightArrow: return "RightArrow"; case KeyboardKey::CapsLock: return "CapsLock";
-                case KeyboardKey::NumLock: return "NumLock"; case KeyboardKey::ScrollLock: return "ScrollLock";
-                case KeyboardKey::PrintScreen: return "PrintScreen"; case KeyboardKey::Insert: return "Insert";
-                case KeyboardKey::Delete: return "Delete"; case KeyboardKey::Home: return "Home";
-                case KeyboardKey::End: return "End"; case KeyboardKey::PageUp: return "PageUp";
-                case KeyboardKey::PageDown: return "PageDown"; case KeyboardKey::LeftWin: return "LeftWin";
-                case KeyboardKey::RightWin: return "RightWin"; case KeyboardKey::Apps: return "Apps";
-                case KeyboardKey::Sleep: return "Sleep"; case KeyboardKey::Numpad0: return "Numpad0";
-                case KeyboardKey::Numpad1: return "Numpad1"; case KeyboardKey::Numpad2: return "Numpad2";
-                case KeyboardKey::Numpad3: return "Numpad3"; case KeyboardKey::Numpad4: return "Numpad4";
-                case KeyboardKey::Numpad5: return "Numpad5"; case KeyboardKey::Numpad6: return "Numpad6";
-                case KeyboardKey::Numpad7: return "Numpad7"; case KeyboardKey::Numpad8: return "Numpad8";
-                case KeyboardKey::Numpad9: return "Numpad9"; case KeyboardKey::NumpadMultiply: return "NumpadMultiply";
-                case KeyboardKey::NumpadAdd: return "NumpadAdd"; case KeyboardKey::NumpadSeparator: return "NumpadSeparator";
-                case KeyboardKey::NumpadSubtract: return "NumpadSubtract";
-                case KeyboardKey::NumpadDecimal: return "NumpadDecimal";
-                case KeyboardKey::NumpadDivide: return "NumpadDivide";
+				// Modifiers
+				{"LeftCtrl", KeyCode::LeftCtrl}, {"RightCtrl", KeyCode::RightCtrl},
+				{"LeftShift", KeyCode::LeftShift}, {"RightShift", KeyCode::RightShift},
+				{"LeftAlt", KeyCode::LeftAlt}, {"RightAlt", KeyCode::RightAlt},
 
-                default: return INVALID_KEY_NAME;
-            }
-        }
+				// Special keys
+				{"Space", KeyCode::Space}, {"Enter", KeyCode::Enter}, {"Escape", KeyCode::Escape},
+				{"Tab", KeyCode::Tab}, {"Backspace", KeyCode::Backspace},
+				{"UpArrow", KeyCode::UpArrow}, {"DownArrow", KeyCode::DownArrow},
+				{"LeftArrow", KeyCode::LeftArrow}, {"RightArrow", KeyCode::RightArrow},
+				{"CapsLock", KeyCode::CapsLock}, {"NumLock", KeyCode::NumLock},
+				{"ScrollLock", KeyCode::ScrollLock}, {"PrintScreen", KeyCode::PrintScreen},
+				{"Insert", KeyCode::Insert}, {"Delete", KeyCode::Delete},
+				{"Home", KeyCode::Home}, {"End", KeyCode::End},
+				{"PageUp", KeyCode::PageUp}, {"PageDown", KeyCode::PageDown},
+				{"LeftWin", KeyCode::LeftWin}, {"RightWin", KeyCode::RightWin},
+				{"Apps", KeyCode::Apps}, {"Sleep", KeyCode::Sleep},
 
-		inline MouseKey StringToMouseKey(const std::string &str) {
-			static const std::unordered_map<std::string, MouseKey> map = {
-				{"Left", MouseKey::Left},
-				{"Right", MouseKey::Right},
-				{"Middle", MouseKey::Middle},
+				// Numpad
+				{"Numpad0", KeyCode::Numpad0}, {"Numpad1", KeyCode::Numpad1}, {"Numpad2", KeyCode::Numpad2},
+				{"Numpad3", KeyCode::Numpad3}, {"Numpad4", KeyCode::Numpad4}, {"Numpad5", KeyCode::Numpad5},
+				{"Numpad6", KeyCode::Numpad6}, {"Numpad7", KeyCode::Numpad7}, {"Numpad8", KeyCode::Numpad8},
+				{"Numpad9", KeyCode::Numpad9}, {"NumpadMultiply", KeyCode::NumpadMultiply},
+				{"NumpadAdd", KeyCode::NumpadAdd}, {"NumpadSeparator", KeyCode::NumpadSeparator},
+				{"NumpadSubtract", KeyCode::NumpadSubtract}, {"NumpadDecimal", KeyCode::NumpadDecimal},
+				{"NumpadDivide", KeyCode::NumpadDivide}
 			};
+
 			auto it = map.find(str);
-			return it != map.end() ? it->second : MouseKey::Unknown;
+			return it != map.end() ? it->second : KeyCode::Count;
 		}
-        inline const char *KeyToString(MouseKey key) {
 
-            switch (key) {
+		inline const char *KeyToString(KeyCode key) {
+			switch (key) {
+				// Mouse
+				case KeyCode::MouseLeft: return "MouseLeft";
+				case KeyCode::MouseRight: return "MouseRight";
+				case KeyCode::MouseMiddle: return "MouseMiddle";
+				case KeyCode::MouseX1: return "MouseX1";
+				case KeyCode::MouseX2: return "MouseX2";
 
-				case MouseKey::Left: return "Left";
-				case MouseKey::Right: return "Right";
-				case MouseKey::Middle: return "Middle";
+					// Letters
+				case KeyCode::A: return "A"; case KeyCode::B: return "B"; case KeyCode::C: return "C";
+				case KeyCode::D: return "D"; case KeyCode::E: return "E"; case KeyCode::F: return "F";
+				case KeyCode::G: return "G"; case KeyCode::H: return "H"; case KeyCode::I: return "I";
+				case KeyCode::J: return "J"; case KeyCode::K: return "K"; case KeyCode::L: return "L";
+				case KeyCode::M: return "M"; case KeyCode::N: return "N"; case KeyCode::O: return "O";
+				case KeyCode::P: return "P"; case KeyCode::Q: return "Q"; case KeyCode::R: return "R";
+				case KeyCode::S: return "S"; case KeyCode::T: return "T"; case KeyCode::U: return "U";
+				case KeyCode::V: return "V"; case KeyCode::W: return "W"; case KeyCode::X: return "X";
+				case KeyCode::Y: return "Y"; case KeyCode::Z: return "Z";
 
-                default: return INVALID_KEY_NAME;
-            }
-        }
+					// Numbers
+				case KeyCode::Num0: return "0"; case KeyCode::Num1: return "1"; case KeyCode::Num2: return "2";
+				case KeyCode::Num3: return "3"; case KeyCode::Num4: return "4"; case KeyCode::Num5: return "5";
+				case KeyCode::Num6: return "6"; case KeyCode::Num7: return "7"; case KeyCode::Num8: return "8";
+				case KeyCode::Num9: return "9";
 
-        inline GamepadKey StringToGamepadKey(const std::string &str) {
-            static const std::unordered_map<std::string, GamepadKey> map = {
-                {"A", GamepadKey::A}, {"B", GamepadKey::B},
-				{"X", GamepadKey::X}, {"Y", GamepadKey::Y},
-				{"LB", GamepadKey::LB}, {"RB", GamepadKey::RB}
+					// Function keys
+				case KeyCode::F1: return "F1"; case KeyCode::F2: return "F2"; case KeyCode::F3: return "F3";
+				case KeyCode::F4: return "F4"; case KeyCode::F5: return "F5"; case KeyCode::F6: return "F6";
+				case KeyCode::F7: return "F7"; case KeyCode::F8: return "F8"; case KeyCode::F9: return "F9";
+				case KeyCode::F10: return "F10"; case KeyCode::F11: return "F11"; case KeyCode::F12: return "F12";
+
+					// Modifiers
+				case KeyCode::LeftCtrl: return "LeftCtrl"; case KeyCode::RightCtrl: return "RightCtrl";
+				case KeyCode::LeftShift: return "LeftShift"; case KeyCode::RightShift: return "RightShift";
+				case KeyCode::LeftAlt: return "LeftAlt"; case KeyCode::RightAlt: return "RightAlt";
+
+					// Special keys
+				case KeyCode::Space: return "Space"; case KeyCode::Enter: return "Enter";
+				case KeyCode::Escape: return "Escape"; case KeyCode::Tab: return "Tab";
+				case KeyCode::Backspace: return "Backspace"; case KeyCode::UpArrow: return "UpArrow";
+				case KeyCode::DownArrow: return "DownArrow"; case KeyCode::LeftArrow: return "LeftArrow";
+				case KeyCode::RightArrow: return "RightArrow"; case KeyCode::CapsLock: return "CapsLock";
+				case KeyCode::NumLock: return "NumLock"; case KeyCode::ScrollLock: return "ScrollLock";
+				case KeyCode::PrintScreen: return "PrintScreen"; case KeyCode::Insert: return "Insert";
+				case KeyCode::Delete: return "Delete"; case KeyCode::Home: return "Home";
+				case KeyCode::End: return "End"; case KeyCode::PageUp: return "PageUp";
+				case KeyCode::PageDown: return "PageDown"; case KeyCode::LeftWin: return "LeftWin";
+				case KeyCode::RightWin: return "RightWin"; case KeyCode::Apps: return "Apps";
+				case KeyCode::Sleep: return "Sleep";
+
+					// Numpad
+				case KeyCode::Numpad0: return "Numpad0"; case KeyCode::Numpad1: return "Numpad1";
+				case KeyCode::Numpad2: return "Numpad2"; case KeyCode::Numpad3: return "Numpad3";
+				case KeyCode::Numpad4: return "Numpad4"; case KeyCode::Numpad5: return "Numpad5";
+				case KeyCode::Numpad6: return "Numpad6"; case KeyCode::Numpad7: return "Numpad7";
+				case KeyCode::Numpad8: return "Numpad8"; case KeyCode::Numpad9: return "Numpad9";
+				case KeyCode::NumpadMultiply: return "NumpadMultiply"; case KeyCode::NumpadAdd: return "NumpadAdd";
+				case KeyCode::NumpadSeparator: return "NumpadSeparator"; case KeyCode::NumpadSubtract: return "NumpadSubtract";
+				case KeyCode::NumpadDecimal: return "NumpadDecimal"; case KeyCode::NumpadDivide: return "NumpadDivide";
+
+				default: return INVALID_KEY_NAME;
+			}
+		}
+
+
+		inline GamepadKey StringToGamepadKey(const std::string &str) {
+			static const std::unordered_map<std::string, GamepadKey> map = {
+				{"A", GamepadKey::A},
+				{"B", GamepadKey::B},
+				{"X", GamepadKey::X},
+				{"Y", GamepadKey::Y},
+				{"LB", GamepadKey::LB},
+				{"RB", GamepadKey::RB}
 			};
 			auto it = map.find(str);
 			return it != map.end() ? it->second : GamepadKey::Unknown;
-        }
-        inline const char *KeyToString(GamepadKey key) {
+		}
+		inline const char *KeyToString(GamepadKey key) {
 
-            switch (key) {
+			switch (key) {
 
 				case GamepadKey::A: return "A";
 				case GamepadKey::B: return "B";
@@ -189,11 +191,11 @@ namespace RF {
 				case GamepadKey::Y: return "Y";
 				case GamepadKey::LB: return "LB";
 				case GamepadKey::RB: return "RB";
-                
 
-                default: return INVALID_KEY_NAME;
-            }
-        }
+
+				default: return INVALID_KEY_NAME;
+			}
+		}
 
 	}
 }

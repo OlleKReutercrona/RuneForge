@@ -8,10 +8,8 @@ namespace RF {
 			keyCurrent.reset();
 			keyPressed.reset();
 			keyReleased.reset();
-			mouseCurrent.reset();
-			mousePressed.reset();
-			mouseReleased.reset();
-			mouseDeltaX = mouseDeltaY = wheelDelta = 0;
+			mouseDeltaX = 0;
+			mouseDeltaY = 0;
 		}
 
 		bool Input::RegisterDevices(HWND hwnd, bool noLegacy) {
@@ -43,37 +41,27 @@ namespace RF {
 			// clear per-frame "pressed" / "released" but keep current state
 			keyPressed.reset();
 			keyReleased.reset();
-			mousePressed.reset();
-			mouseReleased.reset();
 			mouseDeltaX = 0;
 			mouseDeltaY = 0;
 			wheelDelta = 0;
 		}
 
 		bool Input::IsKeyDown(KeyCode vkey) const {
-			if (vkey >= 256) return false;
-			return keyCurrent.test(vkey);
+			return keyCurrent.test((int)vkey);
 		}
 		bool Input::IsKeyPressed(KeyCode vkey) const {
-			if (vkey >= 256) return false;
-			return keyPressed.test(vkey);
+			return keyPressed.test((int)vkey);
 		}
 		bool Input::IsKeyReleased(KeyCode vkey) const {
-			if (vkey >= 256) return false;
-			return keyReleased.test(vkey);
+			return keyReleased.test((int)vkey);
 		}
 
-		bool Input::IsMouseButtonDown(int buttonIdx) const {
-			if (buttonIdx < 0 || buttonIdx >= 8) return false;
-			return mouseCurrent.test(buttonIdx);
+		void Input::SetNotifyFunc(std::function<void(KeyCode)> notifyCallback) {
+			mNotifyCallback = notifyCallback;
 		}
-		bool Input::IsMouseButtonPressed(int buttonIdx) const {
-			if (buttonIdx < 0 || buttonIdx >= 8) return false;
-			return mousePressed.test(buttonIdx);
-		}
-		bool Input::IsMouseButtonReleased(int buttonIdx) const {
-			if (buttonIdx < 0 || buttonIdx >= 8) return false;
-			return mouseReleased.test(buttonIdx);
+
+		void Input::SetNotifyMask(std::bitset<MAX_KEYS> &notifyMask) {
+			mNotifyMask = notifyMask;
 		}
 
 		void Input::InjectKeyboard(USHORT vkey, USHORT flags) {
@@ -98,6 +86,10 @@ namespace RF {
 						keyReleased.reset(vkey);
 					}
 				}
+
+				if (mNotifyMask.test(vkey)) {
+					NotifyKeybindPress((KeyCode)vkey);
+				}
 			}
 		}
 
@@ -111,88 +103,46 @@ namespace RF {
 				// Absolute or other (ignore for now)
 			}
 
-			// Buttons
-			// usButtonFlags can be combination of RI_MOUSE_* values
-			if (m.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) {
-				if (!mouseCurrent.test(0)) {
-					mouseCurrent.set(0);
-					mousePressed.set(0);
-					mouseReleased.reset(0);
-				}
-			}
-			if (m.usButtonFlags & RI_MOUSE_LEFT_BUTTON_UP) {
-				if (mouseCurrent.test(0)) {
-					mouseCurrent.reset(0);
-					mouseReleased.set(0);
-					mousePressed.reset(0);
-				}
-			}
-
-			if (m.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN) {
-				if (!mouseCurrent.test(1)) {
-					mouseCurrent.set(1);
-					mousePressed.set(1);
-					mouseReleased.reset(1);
-				}
-			}
-			if (m.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP) {
-				if (mouseCurrent.test(1)) {
-					mouseCurrent.reset(1);
-					mouseReleased.set(1);
-					mousePressed.reset(1);
-				}
-			}
-
-			if (m.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN) {
-				if (!mouseCurrent.test(2)) {
-					mouseCurrent.set(2);
-					mousePressed.set(2);
-					mouseReleased.reset(2);
-				}
-			}
-			if (m.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_UP) {
-				if (mouseCurrent.test(2)) {
-					mouseCurrent.reset(2);
-					mouseReleased.set(2);
-					mousePressed.reset(2);
-				}
-			}
-
-			// X buttons
-			if (m.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) {
-				if (!mouseCurrent.test(3)) {
-					mouseCurrent.set(3);
-					mousePressed.set(3);
-					mouseReleased.reset(3);
-				}
-			}
-			if (m.usButtonFlags & RI_MOUSE_BUTTON_4_UP) {
-				if (mouseCurrent.test(3)) {
-					mouseCurrent.reset(3);
-					mouseReleased.set(3);
-					mousePressed.reset(3);
-				}
-			}
-			if (m.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN) {
-				if (!mouseCurrent.test(4)) {
-					mouseCurrent.set(4);
-					mousePressed.set(4);
-					mouseReleased.reset(4);
-				}
-			}
-			if (m.usButtonFlags & RI_MOUSE_BUTTON_5_UP) {
-				if (mouseCurrent.test(4)) {
-					mouseCurrent.reset(4);
-					mouseReleased.set(4);
-					mousePressed.reset(4);
-				}
-			}
-
 			// Wheel
 			if (m.usButtonFlags & RI_MOUSE_WHEEL) {
 				// wheel data in usButtonData (signed short)
 				SHORT wheel = static_cast<SHORT>(m.usButtonData);
 				wheelDelta += static_cast<int>(wheel); // in WHEEL_DELTA units
+			}
+
+			// Using a lambda here to minimize boilerplate.
+			auto handleMouseKey = [&](KeyCode code, bool pressed) {
+				if (pressed) {
+					keyCurrent.set((int)code);
+					keyPressed.set((int)code);
+					keyReleased.reset((int)code);
+				} else {
+					keyCurrent.reset((int)code);
+					keyReleased.set((int)code);
+					keyPressed.reset((int)code);
+				}
+
+				if (mNotifyMask.test((int)code)) {
+					NotifyKeybindPress(code);
+				}
+			};
+
+			if (m.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) handleMouseKey(KeyCode::MouseLeft, true);
+			if (m.usButtonFlags & RI_MOUSE_LEFT_BUTTON_UP) handleMouseKey(KeyCode::MouseLeft, false);
+			if (m.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN) handleMouseKey(KeyCode::MouseRight, true);
+			if (m.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP) handleMouseKey(KeyCode::MouseRight, false);
+			if (m.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN) handleMouseKey(KeyCode::MouseMiddle, true);
+			if (m.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_UP) handleMouseKey(KeyCode::MouseMiddle, false);
+			if (m.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) handleMouseKey(KeyCode::MouseX1, true);
+			if (m.usButtonFlags & RI_MOUSE_BUTTON_4_UP) handleMouseKey(KeyCode::MouseX1, false);
+			if (m.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN) handleMouseKey(KeyCode::MouseX2, true);
+			if (m.usButtonFlags & RI_MOUSE_BUTTON_5_UP) handleMouseKey(KeyCode::MouseX2, false);
+		}
+
+		void Input::NotifyKeybindPress(KeyCode key) {
+
+			if (mNotifyCallback) { 
+				mNotifyCallback(key); 
 			}
 		}
 

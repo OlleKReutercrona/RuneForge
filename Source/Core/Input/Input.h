@@ -8,6 +8,8 @@ namespace RF {
 
         class Input {
         public:
+            friend class InputHandler;
+
             Input();
             ~Input() = default;
 
@@ -22,28 +24,28 @@ namespace RF {
             bool IsKeyPressed(KeyCode vkey) const; // went down this frame
             bool IsKeyReleased(KeyCode vkey) const; // went up this frame
 
-            bool IsMouseButtonDown(int buttonIdx) const; // 0=left,1=right,2=middle
-            bool IsMouseButtonPressed(int buttonIdx) const;
-            bool IsMouseButtonReleased(int buttonIdx) const;
-
             int GetMouseDeltaX() const { return mouseDeltaX; }
             int GetMouseDeltaY() const { return mouseDeltaY; }
             int GetWheelDelta() const { return wheelDelta; }
 
+            void SetNotifyFunc(std::function<void(KeyCode)> notifyCallback);
+            void SetNotifyMask(std::bitset<MAX_KEYS> &notifyMask);
+
         private:
+
             // Helpers
             void InjectKeyboard(USHORT vkey, USHORT flags);
             void InjectMouse(const RAWMOUSE &m);
 
-            // Key state
-            std::bitset<256> keyCurrent;   // indexed by virtual-key
-            std::bitset<256> keyPressed;   // pressed this frame
-            std::bitset<256> keyReleased;  // released this frame
+            void NotifyKeybindPress(KeyCode key);
 
-            // Mouse state
-            std::bitset<8> mouseCurrent;
-            std::bitset<8> mousePressed;
-            std::bitset<8> mouseReleased;
+            // Key state
+            std::bitset<MAX_KEYS> keyCurrent;   // indexed by virtual-key
+            std::bitset<MAX_KEYS> keyPressed;   // pressed this frame
+            std::bitset<MAX_KEYS> keyReleased;  // released this frame
+
+            std::bitset<MAX_KEYS> mNotifyMask; // if any key within this bitset is pressed -> Notify InputHandler.
+            std::function<void(KeyCode)> mNotifyCallback = nullptr;
 
             int mouseDeltaX = 0;
             int mouseDeltaY = 0;

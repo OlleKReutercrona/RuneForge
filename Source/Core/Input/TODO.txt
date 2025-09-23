@@ -1,0 +1,11 @@
+[FINISHED 23/9]
++ Merge mouse and keyboard bitset into 1
++ Merge All KeyCode enums into 1 enum class.
++ Make 1 function for IsKeyPressed/Released/Down instead (We do not need explicit ones if above is fixed).
++ Refactor Keybind to have a bitmask instead of vector of input keys. (Fast bitwise lookup)
++ Add container to retrieve all Keybinds using a certain 'key'. (To get fast lookup to check if we should FireEvent).
++ Use Key Enum in input.h instead.
++ Remove Update-loop from InputHandler (checking keybinds) and 
+  make Input notify InputHandler when a key is pressed (Maybe also only a key that is part of a keybind / Global KeybindMask).
+
+  TODO: 
