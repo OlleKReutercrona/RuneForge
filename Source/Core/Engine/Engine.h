@@ -1,4 +1,6 @@
 #pragma once
+#include "Graphics/DX11.h"
+
 namespace RF {
     struct FrameData;
 	struct WindowCreationParams;
@@ -31,5 +33,8 @@ namespace RF {
         std::unique_ptr<Window> mWindow;
 
         std::wstring mAssetsPath;
+
+		DX11 mDX11;
+        //DX12 mDX12;
     };
 }

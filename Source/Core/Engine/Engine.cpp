@@ -21,11 +21,16 @@ RF::Engine::Engine(const RF::EngineCreationParams& params) {
 
 	mWindow = std::make_unique<RF::Window>();
 	mWindow->Init(windowParams);
+
+	mDX11.Init(mWindow->GetHWND(), windowParams.width, windowParams.height);
+	//mDX12.Init(mWindow->GetHWND(), windowParams.width, windowParams.height);
 }
 
 void RF::Engine::Update(const FrameData& frameData) { frameData; }
 
-void RF::Engine::Render(const FrameData& frameData) { frameData; }
+void RF::Engine::Render(const FrameData& frameData) {
+	mDX11.Render(frameData);
+}
 
 void RF::Engine::Shutdown() {}
 
