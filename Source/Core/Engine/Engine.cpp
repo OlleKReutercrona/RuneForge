@@ -3,6 +3,8 @@
 #include "Window/Window.h"
 #include "frameData.h"
 #include "Util/jsonUtil.h"
+#include "Graphics/DX11.h"
+#include "Graphics/DX12.h"
 
 #include <nlohmann/json.hpp>
 
@@ -22,14 +24,21 @@ RF::Engine::Engine(const RF::EngineCreationParams& params) {
 	mWindow = std::make_unique<RF::Window>();
 	mWindow->Init(windowParams);
 
-	mDX11.Init(mWindow->GetHWND(), windowParams.width, windowParams.height);
-	//mDX12.Init(mWindow->GetHWND(), windowParams.width, windowParams.height);
+	switch (mGraphicsAPI) {
+		case GraphicsAPI::DirectX11:
+			mRenderer = std::make_unique<RF::DX11>();
+			break;
+		case GraphicsAPI::DirectX12:
+			mRenderer = std::make_unique<RF::DX12>();
+			break;
+	}
+	mRenderer->Init(mWindow->GetHWND(), windowParams.width, windowParams.height);
 }
 
 void RF::Engine::Update(const FrameData& frameData) { frameData; }
 
 void RF::Engine::Render(const FrameData& frameData) {
-	mDX11.Render(frameData);
+	mRenderer->Render(frameData);
 }
 
 void RF::Engine::Shutdown() {}

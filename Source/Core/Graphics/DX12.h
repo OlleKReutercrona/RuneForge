@@ -2,20 +2,19 @@
 #include <wrl.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include "IRenderer.h"
 
 namespace RF {
-	struct FrameData;
-
-	class DX12 {
+	class DX12 : public IRenderer {
 	public:
 		DX12() = default;
 		~DX12();
 
 		// Initialize DirectX 12 device and rendering pipeline
-		void Init(HWND hwnd, uint32_t width, uint32_t height);
+		virtual void Init(const HWND hwnd, const uint32_t width, const uint32_t height);
 
 		// Render one frame (clear the screen and present)
-		void Render(const FrameData& frameData);
+		virtual void Render(const FrameData& frameData);
 
 	private:
 		// Create GPU command objects (queue, allocator, list)
@@ -28,6 +27,8 @@ namespace RF {
 		void CreateRTV();
 
 	private:
+		bool mInitialized = false;
+
 		static constexpr uint32_t FRAME_COUNT = 2; // double buffering
 
 		// Core D3D12 objects
@@ -51,7 +52,7 @@ namespace RF {
 		UINT mFrameIndex = 0;
 
 		// Sync objects
-		HANDLE mFenceEvent;
+		HANDLE mFenceEvent = 0;
 		UINT64 mFenceValue = 0;
 	};
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/DX11.h"
+#include "Graphics/IRenderer.h"
 
 namespace RF {
     struct FrameData;
@@ -10,6 +10,11 @@ namespace RF {
         WNDPROC windowProc = nullptr;
         int cmdShow = 0;
         HINSTANCE hInstance = nullptr;
+	};
+
+    enum class GraphicsAPI {
+        DirectX11,
+        DirectX12,
 	};
 
     class Engine {
@@ -31,10 +36,9 @@ namespace RF {
 		void LoadConfigFile(RF::WindowCreationParams& windowParams);
 
         std::unique_ptr<Window> mWindow;
+		std::unique_ptr<IRenderer> mRenderer;
+		GraphicsAPI mGraphicsAPI = GraphicsAPI::DirectX11;
 
         std::wstring mAssetsPath;
-
-		DX11 mDX11;
-        //DX12 mDX12;
     };
 }

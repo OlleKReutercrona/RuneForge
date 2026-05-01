@@ -5,6 +5,9 @@
 
 using namespace Microsoft::WRL;
 
+RF::DX11::~DX11() {
+}
+
 void RF::DX11::Init(const HWND hwnd, const uint32_t width, const uint32_t height) {
 	mWidth = width;
 	mHeight = height;
@@ -12,6 +15,8 @@ void RF::DX11::Init(const HWND hwnd, const uint32_t width, const uint32_t height
 	CreateDeviceAndSwapChain(hwnd, width, height);
 	CreateRenderTargetView();
 	CreateViewport(width, height);
+
+	mInitialized = true;
 }
 
 void RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height) {
@@ -73,13 +78,14 @@ void RF::DX11::CreateViewport(const uint32_t width, const uint32_t height) {
 
 void RF::DX11::Render(const FrameData& frameData) {
 	frameData;
+
+	if (!mInitialized) {
+		throw std::runtime_error("Renderer not initialized");
+	}
+
 	// Clear the back buffer to a color (RGBA)
 	const FLOAT clearColor[] = { 0.2f, 0.4f, 0.6f, 1.0f };
 	pContext->ClearRenderTargetView(pDefaultTarget.Get(), clearColor);
 	// Present the back buffer to the screen
 	pSwap->Present(1u, 0u);
-}
-
-RF::DX11::~DX11() {
-	
 }

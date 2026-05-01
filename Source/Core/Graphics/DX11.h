@@ -2,20 +2,22 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include <dxgi1_6.h>
+#include "IRenderer.h"
 
 namespace RF {
-	struct FrameData;
-
-	class DX11 {
+	class DX11 : public IRenderer {
 	public:
 		DX11() = default;
-		void Init(const HWND hwnd, const uint32_t width, const uint32_t height);
-		void Render(const FrameData& frameData);
 		~DX11();
+
+		virtual void Init(const HWND hwnd, const uint32_t width, const uint32_t height);
+		virtual void Render(const FrameData& frameData);
 	private:
 		void CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height);
 		void CreateRenderTargetView();
 		void CreateViewport(const uint32_t width, const uint32_t height);
+
+		bool mInitialized = false;
 
 		uint32_t mWidth;
 		uint32_t mHeight;
