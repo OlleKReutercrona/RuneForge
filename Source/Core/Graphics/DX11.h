@@ -7,17 +7,14 @@
 namespace RF {
 	class DX11 : public IRenderer {
 	public:
-		DX11() = default;
+		DX11(const HWND hwnd, const uint32_t width, const uint32_t height);
 		~DX11();
 
-		virtual void Init(const HWND hwnd, const uint32_t width, const uint32_t height);
 		virtual void Render(const FrameData& frameData);
 	private:
 		void CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height);
 		void CreateRenderTargetView();
 		void CreateViewport(const uint32_t width, const uint32_t height);
-
-		bool mInitialized = false;
 
 		uint32_t mWidth;
 		uint32_t mHeight;

@@ -6,19 +6,7 @@
 
 using namespace Microsoft::WRL;
 
-RF::DX12::~DX12() {
-	// Ensure GPU is finished before destroying resources
-	mFenceValue++;
-	HRESULT hr = mCommandQueue->Signal(mFence.Get(), mFenceValue);
-
-	if (mFence->GetCompletedValue() < mFenceValue) {
-		hr = mFence->SetEventOnCompletion(mFenceValue, mFenceEvent);
-		WaitForSingleObject(mFenceEvent, INFINITE);
-	}
-	CloseHandle(mFenceEvent);
-}
-
-void RF::DX12::Init(const HWND hwnd, const uint32_t width, const uint32_t height) {
+RF::DX12::DX12(const HWND hwnd, const uint32_t width, const uint32_t height) {
 	UINT dxgiFactoryFlags = 0;
 
 #if defined(_DEBUG)
@@ -61,16 +49,22 @@ void RF::DX12::Init(const HWND hwnd, const uint32_t width, const uint32_t height
 
 	// Get the current back buffer index
 	mFrameIndex = mSwapChain->GetCurrentBackBufferIndex();
+}
 
-	mInitialized = true;
+RF::DX12::~DX12() {
+	// Ensure GPU is finished before destroying resources
+	mFenceValue++;
+	HRESULT hr = mCommandQueue->Signal(mFence.Get(), mFenceValue);
+
+	if (mFence->GetCompletedValue() < mFenceValue) {
+		hr = mFence->SetEventOnCompletion(mFenceValue, mFenceEvent);
+		WaitForSingleObject(mFenceEvent, INFINITE);
+	}
+	CloseHandle(mFenceEvent);
 }
 
 void RF::DX12::Render(const FrameData& frameData) {
 	frameData;
-
-	if (!mInitialized) {
-		throw std::runtime_error("Renderer not initialized");
-	}
 
 	// Reset allocator and command list each frame
 	HRESULT hr = mCommandAllocator->Reset();

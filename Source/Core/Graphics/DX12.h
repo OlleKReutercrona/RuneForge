@@ -7,11 +7,8 @@
 namespace RF {
 	class DX12 : public IRenderer {
 	public:
-		DX12() = default;
+		DX12(const HWND hwnd, const uint32_t width, const uint32_t height);
 		~DX12();
-
-		// Initialize DirectX 12 device and rendering pipeline
-		virtual void Init(const HWND hwnd, const uint32_t width, const uint32_t height);
 
 		// Render one frame (clear the screen and present)
 		virtual void Render(const FrameData& frameData);
@@ -27,8 +24,6 @@ namespace RF {
 		void CreateRTV();
 
 	private:
-		bool mInitialized = false;
-
 		static constexpr uint32_t FRAME_COUNT = 2; // double buffering
 
 		// Core D3D12 objects

@@ -26,13 +26,12 @@ RF::Engine::Engine(const RF::EngineCreationParams& params) {
 
 	switch (mGraphicsAPI) {
 		case GraphicsAPI::DirectX11:
-			mRenderer = std::make_unique<RF::DX11>();
+			mRenderer = std::make_unique<RF::DX11>(mWindow->GetHWND(), windowParams.width, windowParams.height);
 			break;
 		case GraphicsAPI::DirectX12:
-			mRenderer = std::make_unique<RF::DX12>();
+			mRenderer = std::make_unique<RF::DX12>(mWindow->GetHWND(), windowParams.width, windowParams.height);
 			break;
 	}
-	mRenderer->Init(mWindow->GetHWND(), windowParams.width, windowParams.height);
 }
 
 void RF::Engine::Update(const FrameData& frameData) { frameData; }
