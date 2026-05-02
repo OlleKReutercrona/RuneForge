@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "DX11.h"
-
 #include <stdexcept>
 
 using namespace Microsoft::WRL;
