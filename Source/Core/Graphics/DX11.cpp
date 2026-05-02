@@ -9,15 +9,25 @@ RF::DX11::DX11(const HWND hwnd, const uint32_t width, const uint32_t height) {
 	mWidth = width;
 	mHeight = height;
 
-	CreateDeviceAndSwapChain(hwnd, width, height);
-	CreateRenderTargetView();
-	CreateViewport(width, height);
+	HRESULT hr = S_OK;
+
+	hr = CreateDeviceAndSwapChain(hwnd, width, height);
+	if (FAILED(hr))
+		throw std::runtime_error("Failed to create Direct3D 11 device and swap chain.");
+
+	hr = CreateRenderTargetView();
+	if (FAILED(hr))
+		throw std::runtime_error("Failed to create Direct3D 11 render target view.");
+
+	SetViewport(width, height);
 }
 
 RF::DX11::~DX11() {
 }
 
-void RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height) {
+HRESULT RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height) {
+	HRESULT hr = S_OK;
+
 	DXGI_SWAP_CHAIN_DESC scd = {};
 	scd.BufferDesc.Width = width;
 	scd.BufferDesc.Height = height;
@@ -40,7 +50,7 @@ void RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, c
 	swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	D3D11CreateDeviceAndSwapChain(
+	hr = D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -49,21 +59,29 @@ void RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, c
 		0,
 		D3D11_SDK_VERSION,
 		&scd,
-		&pSwap,
-		&pDevice,
+		&mSwap,
+		&mDevice,
 		nullptr,
-		&pContext
+		&mContext
 	);
+
+	return hr;
 }
 
-void RF::DX11::CreateRenderTargetView() {
-	// Gain access to texture subresource in swap chains (back buffer)
-	Microsoft::WRL::ComPtr<ID3D11Resource> pBackBuffer;
-	pSwap->GetBuffer(0u, __uuidof(ID3D11Resource), &pBackBuffer);
-	pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pDefaultTarget);
+HRESULT RF::DX11::CreateRenderTargetView() {
+	HRESULT hr = S_OK;
+
+	Microsoft::WRL::ComPtr<ID3D11Resource> backBuffer;
+	hr = mSwap->GetBuffer(0u, __uuidof(ID3D11Resource), &backBuffer);
+	if (FAILED(hr))
+		return hr;
+
+	hr = mDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &mDefaultTarget);
+
+	return hr;
 }
 
-void RF::DX11::CreateViewport(const uint32_t width, const uint32_t height) {
+void RF::DX11::SetViewport(const uint32_t width, const uint32_t height) {
 	D3D11_VIEWPORT vp = {};
 	vp.Width = static_cast<FLOAT>(width);
 	vp.Height = static_cast<FLOAT>(height);
@@ -71,15 +89,11 @@ void RF::DX11::CreateViewport(const uint32_t width, const uint32_t height) {
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
-	pContext->RSSetViewports(1u, &vp);
+	mContext->RSSetViewports(1u, &vp);
 }
 
-void RF::DX11::Render(const FrameData& frameData) {
-	frameData;
-
-	// Clear the back buffer to a color (RGBA)
+void RF::DX11::Render(const FrameData&) {
 	const FLOAT clearColor[] = { 0.2f, 0.4f, 0.6f, 1.0f };
-	pContext->ClearRenderTargetView(pDefaultTarget.Get(), clearColor);
-	// Present the back buffer to the screen
-	pSwap->Present(1u, 0u);
+	mContext->ClearRenderTargetView(mDefaultTarget.Get(), clearColor);
+	mSwap->Present(1u, 0u);
 }
