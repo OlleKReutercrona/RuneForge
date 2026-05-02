@@ -1,8 +1,8 @@
 #pragma once
+#include "IRenderer.h"
 #include <wrl.h>
 #include <d3d11.h>
 #include <dxgi1_6.h>
-#include "IRenderer.h"
 
 namespace RF {
 	class DX11 : public IRenderer {
@@ -12,16 +12,16 @@ namespace RF {
 
 		virtual void Render(const FrameData& frameData);
 	private:
-		void CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height);
-		void CreateRenderTargetView();
-		void CreateViewport(const uint32_t width, const uint32_t height);
+		HRESULT CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height);
+		HRESULT CreateRenderTargetView();
+		void SetViewport(const uint32_t width, const uint32_t height);
 
 		uint32_t mWidth;
 		uint32_t mHeight;
 
-		Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-		Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
-		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pDefaultTarget;
+		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
+		Microsoft::WRL::ComPtr<IDXGISwapChain> mSwap;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mDefaultTarget;
 	};
 }
