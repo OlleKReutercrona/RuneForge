@@ -1,11 +1,10 @@
 #pragma once
 #include <cmath>
 
-#ifndef PI
-#define PI 3.14159265358979323846f
-#endif
-
 namespace math {
+    #ifndef PI
+    #define PI 3.14159265358979323846f
+    #endif
 
     static inline constexpr float TWO_PI = 2.0f * PI;
     static inline constexpr float HALF_PI = 0.5f * PI;

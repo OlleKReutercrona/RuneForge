@@ -6,8 +6,9 @@
 
 using namespace DirectX;
 
-TestUtility testUtility;
-
+namespace {
+	TestUtility testUtility;
+}
 
 namespace DirectX {
 	inline bool XMMatrixEqual(const DirectX::XMMATRIX& lhs, const DirectX::XMMATRIX& rhs) noexcept {
