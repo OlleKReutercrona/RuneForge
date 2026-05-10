@@ -4,18 +4,13 @@
 
 using namespace Microsoft::WRL;
 
-RF::DX11::DX11(const HWND hwnd, const uint32_t width, const uint32_t height) {
-	mWidth = width;
-	mHeight = height;
-
-	HRESULT hr = S_OK;
-
-	hr = CreateDeviceAndSwapChain(hwnd, width, height);
-	if (FAILED(hr))
+RF::DX11::DX11(const HWND hwnd, const uint32_t width, const uint32_t height) :
+	mWidth(width),
+	mHeight(height) {
+	if (FAILED(CreateDeviceAndSwapChain(hwnd, width, height)))
 		throw std::runtime_error("Failed to create Direct3D 11 device and swap chain.");
 
-	hr = CreateRenderTargetView();
-	if (FAILED(hr))
+	if (FAILED(CreateRenderTargetView()))
 		throw std::runtime_error("Failed to create Direct3D 11 render target view.");
 
 	SetViewport(width, height);
@@ -25,8 +20,6 @@ RF::DX11::~DX11() {
 }
 
 HRESULT RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width, const uint32_t height) {
-	HRESULT hr = S_OK;
-
 	DXGI_SWAP_CHAIN_DESC scd = {};
 	scd.BufferDesc.Width = width;
 	scd.BufferDesc.Height = height;
@@ -49,7 +42,7 @@ HRESULT RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width
 	swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	hr = D3D11CreateDeviceAndSwapChain(
+	return D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -63,8 +56,6 @@ HRESULT RF::DX11::CreateDeviceAndSwapChain(const HWND hwnd, const uint32_t width
 		nullptr,
 		&mContext
 	);
-
-	return hr;
 }
 
 HRESULT RF::DX11::CreateRenderTargetView() {
@@ -76,7 +67,6 @@ HRESULT RF::DX11::CreateRenderTargetView() {
 		return hr;
 
 	hr = mDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, &mDefaultTarget);
-
 	return hr;
 }
 
