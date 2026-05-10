@@ -26,11 +26,20 @@ RF::Engine::Engine(const RF::EngineCreationParams& params) {
 
 	switch (mGraphicsAPI) {
 		case GraphicsAPI::DirectX11:
-			mRenderer = std::make_unique<RF::DX11>(mWindow->GetHWND(), windowParams.width, windowParams.height);
+		{
+			DX11CreationParams dx11Params;
+			dx11Params.hwnd = mWindow->GetHWND();
+			dx11Params.width = windowParams.width;
+			dx11Params.height = windowParams.height;
+			//dx11Params.clearColour = { 0.2f, 0.4f, 0.6f, 1.0f };
+			mRenderer = std::make_unique<RF::DX11>(dx11Params);
 			break;
+		}
 		case GraphicsAPI::DirectX12:
+		{
 			mRenderer = std::make_unique<RF::DX12>(mWindow->GetHWND(), windowParams.width, windowParams.height);
 			break;
+		}
 	}
 }
 

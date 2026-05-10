@@ -4,16 +4,17 @@
 
 using namespace Microsoft::WRL;
 
-RF::DX11::DX11(const HWND hwnd, const uint32_t width, const uint32_t height) :
-	mWidth(width),
-	mHeight(height) {
-	if (FAILED(CreateDeviceAndSwapChain(hwnd, width, height)))
+RF::DX11::DX11(const DX11CreationParams& params) :
+	mWidth(params.width),
+	mHeight(params.height) {
+	//mClearColour(params.clearColour) {
+	if (FAILED(CreateDeviceAndSwapChain(params.hwnd, params.width, params.height)))
 		throw std::runtime_error("Failed to create Direct3D 11 device and swap chain.");
 
 	if (FAILED(CreateRenderTargetView()))
 		throw std::runtime_error("Failed to create Direct3D 11 render target view.");
 
-	SetViewport(width, height);
+	SetViewport(mWidth, mHeight);
 }
 
 RF::DX11::~DX11() {

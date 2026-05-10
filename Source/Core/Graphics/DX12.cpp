@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "DX12.h"
-#include "d3dx12.h" // helper classes for barriers, handles, etc.
 
+#include <DirectX12/d3dx12.h> // helper classes for barriers, handles, etc.
 #include <stdexcept>
 
 using namespace Microsoft::WRL;
