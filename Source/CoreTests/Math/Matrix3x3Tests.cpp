@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <DirectXMath.h>
 #include "Math/Matrix3x3.h"
 #include "Utility/TestUtility.h"
+#include <DirectXMath.h>
 
 using namespace DirectX;
 
@@ -24,9 +24,9 @@ inline bool operator==(const DirectX::XMMATRIX& lhs, const DirectX::XMMATRIX& rh
 inline bool operator!=(const DirectX::XMMATRIX& lhs, const DirectX::XMMATRIX& rhs) noexcept {
 	return !(lhs == rhs);
 }
-}
+} // namespace DirectX
 
-inline bool operator==(   const Matrix3x3& lhs, const Matrix3x3& rhs) noexcept {
+inline bool operator==(const Matrix3x3& lhs, const Matrix3x3& rhs) noexcept {
 	return DirectX::XMMatrixEqual(lhs, rhs);
 }
 
