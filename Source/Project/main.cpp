@@ -1,8 +1,10 @@
 #include "stdafx.h"
-#include <Windows.h>
+
 #include "Core/Platform/WindowsApplication.h"
 
-_Use_decl_annotations_
+#include <Windows.h>
+
+_Use_decl_annotations_ 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, PSTR cmdline, int cmdshow) {
 	hInstancePrev;
 	cmdline;
@@ -10,5 +12,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, PSTR cmdline, i
 	cmdshow;
 
 	RF::WindowsApplication app;
-	return 	app.Run(hInstance, cmdshow);
+	return app.Run(hInstance, cmdshow);
 }

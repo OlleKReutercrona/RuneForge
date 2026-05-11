@@ -1,13 +1,17 @@
 #include "stdafx.h"
+
 #include "Engine.h"
+
+
+
+
+#include "Util/jsonUtil.h"
 #include "Window/Window.h"
 #include "frameData.h"
-#include "Util/jsonUtil.h"
-
 #include <nlohmann/json.hpp>
 
 namespace {
-	constexpr std::string_view gConfigFilePath = "../engineConfig.json";
+constexpr std::string_view gConfigFilePath = "../engineConfig.json";
 }
 
 RF::Engine::Engine(const RF::EngineCreationParams& params) {
@@ -23,11 +27,16 @@ RF::Engine::Engine(const RF::EngineCreationParams& params) {
 	mWindow->Init(windowParams);
 }
 
-void RF::Engine::Update(const FrameData& frameData) { frameData; }
+void RF::Engine::Update(const FrameData& frameData) {
+	frameData;
+}
 
-void RF::Engine::Render(const FrameData& frameData) { frameData; }
+void RF::Engine::Render(const FrameData& frameData) {
+	frameData;
+}
 
-void RF::Engine::Shutdown() {}
+void RF::Engine::Shutdown() {
+}
 
 void RF::Engine::OnResize(const unsigned int width, const unsigned int height) {
 	mWindow->SetSize(width, height);
