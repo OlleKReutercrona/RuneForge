@@ -33,4 +33,4 @@ class Engine {
 
 	std::wstring mAssetsPath;
 };
-}
+} // namespace RF

@@ -2,8 +2,6 @@
 
 #include "WindowsApplication.h"
 
-
-
 #include "Engine/Engine.h"
 #include "Engine/Window/Window.h"
 #include "Engine/frameData.h"

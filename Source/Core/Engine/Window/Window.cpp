@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-
-
-
 #include "Window.h"
 
 void RF::Window::Init(const WindowCreationParams& params) {

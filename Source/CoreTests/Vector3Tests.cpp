@@ -22,7 +22,7 @@ TEST(Vector3Tests, ConstructorAndEquality) {
 	EXPECT_FLOAT_EQ(v1.z, 3.0f);
 
 	// XMFLOAT3 constructor
-	DirectX::XMFLOAT3 xf{                        4.0f, 5.0f, 6.0f};
+	DirectX::XMFLOAT3 xf{4.0f, 5.0f, 6.0f};
 	Vector3 v2(xf);
 	EXPECT_FLOAT_EQ(v2.x, 4.0f);
 	EXPECT_FLOAT_EQ(v2.y, 5.0f);

@@ -6,7 +6,8 @@
 /// </summary>
 class Matrix3x3 {
   public:
-	Matrix3x3() : mMatrix(DirectX::XMMatrixIdentity()) {}
+	Matrix3x3() : mMatrix(DirectX::XMMatrixIdentity()) {
+	}
 
 	Matrix3x3(const Matrix3x3& other) : mMatrix(other) {
 	}

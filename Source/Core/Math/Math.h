@@ -18,28 +18,23 @@ static inline constexpr float Rad2Deg(float rad) noexcept {
 	return rad * (180.0f / PI);
 }
 
-template <typename T>
-static inline constexpr T Square(const T& x) noexcept {
+template <typename T> static inline constexpr T Square(const T& x) noexcept {
 	return x * x;
 }
 
-template <typename T>
-static inline constexpr T Cube(const T& x) noexcept {
+template <typename T> static inline constexpr T Cube(const T& x) noexcept {
 	return x * x * x;
 }
 
-template <typename T>
-static inline constexpr const T& Min(const T& a, const T& b) noexcept {
+template <typename T> static inline constexpr const T& Min(const T& a, const T& b) noexcept {
 	return (a < b) ? a : b;
 }
 
-template <typename T>
-static inline constexpr const T& Max(const T& a, const T& b) noexcept {
+template <typename T> static inline constexpr const T& Max(const T& a, const T& b) noexcept {
 	return (a > b) ? a : b;
 }
 
-template <typename T>
-static inline constexpr const T& Clamp(const T& x, const T& lo, const T& hi) noexcept {
+template <typename T> static inline constexpr const T& Clamp(const T& x, const T& lo, const T& hi) noexcept {
 	return (x < lo) ? lo : (x > hi ? hi : x);
 }
 
@@ -53,4 +48,4 @@ static inline float WrapRad(float r) noexcept {
 	return (result < 0.0f) ? result + TWO_PI : result;
 }
 
-}
+} // namespace math

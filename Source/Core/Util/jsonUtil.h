@@ -24,8 +24,7 @@ void Serialize(const std::string& directory, const nlohmann::json& obj);
 /// <param name="key">Name of the wanted value</param>
 /// <param name="defaultValue">A default value to fall back on if key doesn't excist</param>
 /// <returns></returns>
-template <typename T>
-T TryGet(const nlohmann::json& json, const std::string& key, const T& defaultValue) {
+template <typename T> T TryGet(const nlohmann::json& json, const std::string& key, const T& defaultValue) {
 	if (!json.contains(key)) {
 		return defaultValue;
 	}
@@ -33,4 +32,4 @@ T TryGet(const nlohmann::json& json, const std::string& key, const T& defaultVal
 	return json.at(key).get<T>();
 }
 } // namespace Json
-}
+} // namespace RF

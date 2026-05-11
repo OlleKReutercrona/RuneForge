@@ -17,7 +17,8 @@ class Vector3 {
 
 	// Constructors //
 
-	constexpr Vector3() noexcept : x(0), y(0), z(0) {}
+	constexpr Vector3() noexcept : x(0), y(0), z(0) {
+	}
 
 	constexpr Vector3(float X, float Y, float Z) noexcept : x(X), y(Y), z(Z) {
 	}

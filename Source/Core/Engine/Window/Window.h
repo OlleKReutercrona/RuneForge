@@ -11,7 +11,7 @@ struct WindowCreationParams {
 	bool isResizable = true;
 
 	HINSTANCE hInstance = nullptr;
-	int     cmdShow = 0;
+	int cmdShow = 0;
 	RF::Engine* engine = nullptr;
 	WNDPROC windowProc = nullptr;
 };

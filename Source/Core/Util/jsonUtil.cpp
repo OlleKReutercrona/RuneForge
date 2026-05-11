@@ -13,7 +13,7 @@ bool isJson(const std::string& directory) {
 
 	return lineEnding == gJson;
 }
-}
+} // namespace RF::Json
 
 nlohmann::json RF::Json::Parse(const std::string& directory) {
 	if (!isJson(directory)) {
