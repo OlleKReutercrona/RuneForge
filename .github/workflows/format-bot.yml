@@ -67,7 +67,7 @@ jobs:
           # Exclude Source/External/
           FILES=$(echo "$FILES" | grep -Ev 'Source/External/' || true)
 
-          echo "$FILES" | xargs -r clang-format -i
+          echo "$FILES" | xargs -r clang-format-19 -i
 
       - name: Commit fixes
         run: |
