@@ -48,7 +48,7 @@ jobs:
           if ! git diff --name-only -z --diff-filter=AM $BASE $HEAD \
               | grep -zE '\.(cpp|hpp|c|h)$' \
               | grep -zEv 'External/' \
-              | xargs -0 -r clang-format --dry-run --Werror; then
+              | xargs -0 -r clang-format-19 --dry-run --Werror; then
             echo ""
             echo "❌ Formatting issues detected"
             exit 1

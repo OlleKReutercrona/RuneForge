@@ -35,11 +35,11 @@ IndentCaseLabels: true
 
 InsertBraces: true
 
-# KeepEmptyLines:
-#   AtStartOfBlock: false
-#   AtStartOfFile: false
+KeepEmptyLines:
+  AtStartOfBlock: false
+  AtStartOfFile: false
 
-# BreakTemplateDeclarations: Yes
+BreakTemplateDeclarations: Yes
 
 MaxEmptyLinesToKeep: 1
 
