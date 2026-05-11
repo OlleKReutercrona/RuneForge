@@ -1,0 +1,121 @@
+name: Format on Command
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  format:
+    if: |
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/format')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get PR metadata
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            core.setOutput("base_sha", pr.data.base.sha);
+            core.setOutput("head_sha", pr.data.head.sha);
+            core.setOutput("head_ref", pr.data.head.ref);
+
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.head_sha }}
+          fetch-depth: 0
+
+      - name: Create PR status comment (start)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue_number = context.issue.number;
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              body: "🔧 `/format` started — running clang-format..."
+            });
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format-22
+          clang-format --version
+            
+      - name: Format changed files
+        run: |
+          BASE=${{ steps.pr.outputs.base_sha }}
+          HEAD=${{ steps.pr.outputs.head_sha }}
+          
+          FILES=$(git diff --name-only --diff-filter=AM $BASE $HEAD | grep -E '\.(cpp|hpp|c|h)$' || true)
+
+          # Exclude Source/External/
+          FILES=$(echo "$FILES" | grep -Ev 'Source/External/' || true)
+
+          echo "$FILES" | xargs -r clang-format -i
+
+      - name: Commit fixes
+        run: |
+          echo "Commiting formatted changes"
+
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action (clang-format)"
+
+          BRANCH="${{ steps.pr.outputs.head_ref }}"
+          echo "🔀 Using PR branch: $BRANCH"
+
+          # Ensure we're on the correct branch (handle detached HEAD)
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          if [ "$CURRENT_BRANCH" = "HEAD" ]; then
+            echo "⚠️  Currently in detached HEAD state, checking out $BRANCH"
+            git fetch origin "$BRANCH"
+            git checkout "$BRANCH" || {
+              echo "❌ Failed to checkout branch $BRANCH"
+              exit 1
+            }
+          fi
+          
+          # Add and commit changes
+          git add -A
+          git commit -m "Apply clang-format fixes" || {
+            echo "❌ Failed to commit changes"
+            exit 1
+          }
+          
+          # Push changes
+          git push origin "$BRANCH" || {
+            echo "❌ Failed to push changes"
+            echo "This might happen if the repository requires additional permissions"
+            echo "Make sure to use a token with write permissions in actions/checkout"
+            exit 1
+          }
+          
+          echo "✅ Changes committed and pushed successfully to $BRANCH"
+
+      - name: Comment success
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue_number = context.issue.number;
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+              body: "✅ clang-format complete — fixes pushed to PR."
+            });
