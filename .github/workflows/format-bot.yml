@@ -32,6 +32,21 @@ jobs:
             core.setOutput("head_sha", pr.data.head.sha);
             core.setOutput("head_ref", pr.data.head.ref);
 
+      - name: Create check run
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const check = await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "format",
+              head_sha: "${{ steps.pr.outputs.head_sha }}",
+              status: "in_progress"
+            });
+
+            core.setOutput("check_id", check.data.id);
+
       - name: Checkout PR
         uses: actions/checkout@v4
         with:
@@ -107,15 +122,27 @@ jobs:
           
           echo "✅ Changes committed and pushed successfully to $BRANCH"
 
-      - name: Comment success
+      - name: Mark check result
+        if: always()
         uses: actions/github-script@v7
+        env:
+          CHECK_ID: ${{ steps.check.outputs.check_id }}
         with:
           script: |
-            const issue_number = context.issue.number;
+            const conclusion = "${{ job.status }}" === "success"
+              ? "success"
+              : "failure";
 
-            github.rest.issues.createComment({
+            await github.rest.checks.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              issue_number,
-              body: "✅ clang-format complete — fixes pushed to PR."
+              check_run_id: process.env.CHECK_ID,
+              status: "completed",
+              conclusion,
+              output: {
+                title: `format ${conclusion}`,
+                summary: conclusion === "success"
+                  ? "Formatting passed"
+                  : "Formatting failed or fixes were applied"
+              }
             });
