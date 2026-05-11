@@ -39,7 +39,7 @@ InsertBraces: true
 #   AtStartOfBlock: false
 #   AtStartOfFile: false
 
-BreakTemplateDeclarations: Yes
+# BreakTemplateDeclarations: Yes
 
 MaxEmptyLinesToKeep: 1
 
