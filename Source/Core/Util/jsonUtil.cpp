@@ -1,18 +1,19 @@
 #include "stdafx.h"
-#include <nlohmann/json.hpp>
+
 #include "jsonUtil.h"
 
+#include <nlohmann/json.hpp>
+
 namespace RF::Json {
-	constexpr std::string_view gJson = ".json";
+constexpr std::string_view gJson = ".json";
 
-	bool isJson(const std::string& directory) {
-		auto strPos = directory.find_last_of('.');
-		std::string lineEnding(directory.begin() + strPos, directory.end());
+bool isJson(const std::string& directory) {
+	auto strPos = directory.find_last_of('.');
+	std::string lineEnding(directory.begin() + strPos, directory.end());
 
-		return lineEnding == gJson;
-	}
+	return lineEnding == gJson;
 }
-
+} // namespace RF::Json
 
 nlohmann::json RF::Json::Parse(const std::string& directory) {
 	if (!isJson(directory)) {

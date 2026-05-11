@@ -5,17 +5,27 @@
 /// Matrix3x3 wrapper class for DirectXMath's XMMATRIX.
 /// </summary>
 class Matrix3x3 {
-public:
-	Matrix3x3() : mMatrix(DirectX::XMMatrixIdentity()) {}
-	Matrix3x3(const Matrix3x3& other) : mMatrix(other) {}
-	Matrix3x3(Matrix3x3& other) : mMatrix(other) {}
-	Matrix3x3(const DirectX::XMMATRIX& other) : mMatrix(other) {}
-	Matrix3x3(DirectX::XMMATRIX& other) : mMatrix(other) {}
-	Matrix3x3(const float* floatArray) : mMatrix(floatArray) {}
-	Matrix3x3(
-		const float r0c0, const float r0c1, const float r0c2,
-		const float r1c0, const float r1c1, const float r1c2,
-		const float r2c0, const float r2c1, const float r2c2);
+  public:
+	Matrix3x3() : mMatrix(DirectX::XMMatrixIdentity()) {
+	}
+
+	Matrix3x3(const Matrix3x3& other) : mMatrix(other) {
+	}
+
+	Matrix3x3(Matrix3x3& other) : mMatrix(other) {
+	}
+
+	Matrix3x3(const DirectX::XMMATRIX& other) : mMatrix(other) {
+	}
+
+	Matrix3x3(DirectX::XMMATRIX& other) : mMatrix(other) {
+	}
+
+	Matrix3x3(const float* floatArray) : mMatrix(floatArray) {
+	}
+
+	Matrix3x3(const float r0c0, const float r0c1, const float r0c2, const float r1c0, const float r1c1,
+			  const float r1c2, const float r2c0, const float r2c1, const float r2c2);
 
 	float& operator()(const unsigned int row, const unsigned int column) noexcept;
 	Matrix3x3& operator=(const Matrix3x3& other) noexcept;
@@ -30,7 +40,10 @@ public:
 	Matrix3x3& operator*=(const float scalar) noexcept;
 	Matrix3x3 operator/(const float scalar) const noexcept;
 	Matrix3x3& operator/=(const float scalar) noexcept;
-	operator DirectX::XMMATRIX() const noexcept { return mMatrix; }
+
+	operator DirectX::XMMATRIX() const noexcept {
+		return mMatrix;
+	}
 
 	Matrix3x3 Transpose() const;
 	Matrix3x3 Inverse() const; // Todo, add parameter for determinant when Vector3 is implemented
@@ -39,22 +52,17 @@ public:
 	static inline Matrix3x3 CreateRotationAroundZ(const float angle);
 
 	// Todo, implement these methods when Vector3 is implemented
-	//Matrix3x3 CreateTranslationMatrix(const Vector3& scaleVector);
-	//Matrix3x3 CreateScaleMatrix(const Vector3& scaleVector);
-	//Matrix3x3 CreateRotationMatrix(const Vector3& scaleVector);
+	// Matrix3x3 CreateTranslationMatrix(const Vector3& scaleVector);
+	// Matrix3x3 CreateScaleMatrix(const Vector3& scaleVector);
+	// Matrix3x3 CreateRotationMatrix(const Vector3& scaleVector);
 
 	DirectX::XMMATRIX mMatrix = {};
 };
 
-inline Matrix3x3::Matrix3x3(
-	const float r0c0, const float r0c1, const float r0c2, 
-	const float r1c0, const float r1c1, const float r1c2, 
-	const float r2c0, const float r2c1, const float r2c2) :
-	mMatrix({
-		r0c0, r0c1, r0c2, 0.0f,
-		r1c0, r1c1, r1c2, 0.0f,
-		r2c0, r2c1, r2c2, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f }) { }
+inline Matrix3x3::Matrix3x3(const float r0c0, const float r0c1, const float r0c2, const float r1c0, const float r1c1,
+							const float r1c2, const float r2c0, const float r2c1, const float r2c2)
+	: mMatrix({r0c0, r0c1, r0c2, 0.0f, r1c0, r1c1, r1c2, 0.0f, r2c0, r2c1, r2c2, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}) {
+}
 
 float& Matrix3x3::operator()(const unsigned int row, const unsigned int column) noexcept {
 	assert(row < 3 && column < 3 && "Matrix3x3: Index out of bounds");
@@ -63,7 +71,7 @@ float& Matrix3x3::operator()(const unsigned int row, const unsigned int column) 
 }
 
 Matrix3x3& Matrix3x3::operator=(const Matrix3x3& other) noexcept {
-	if(this != &other) {
+	if (this != &other) {
 		mMatrix = other.mMatrix;
 	}
 

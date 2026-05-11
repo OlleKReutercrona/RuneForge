@@ -1,9 +1,9 @@
 #pragma once
-// STL 
-#include <string>
+// STL
 #include <map>
+#include <string>
 #include <vector>
-#include <memory>
 
 // Windows
 #include <Windows.h>
+#include <memory>
