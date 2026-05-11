@@ -1,9 +1,5 @@
 #include <gtest/gtest.h>
 
-
-
-
-
 #include "Math/Vector2.h"
 
 namespace RFMath {
@@ -215,8 +211,6 @@ TEST(Vector2iTests, AssignFromXMINT2) {
 	EXPECT_EQ(v.y, -10);
 }
 
-
-
 #pragma endregion
 
-} 
+} // namespace RFMath

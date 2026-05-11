@@ -10,4 +10,4 @@ class WindowsApplication {
   private:
 	static LRESULT CALLBACK WindowProc(HWND hWND, UINT message, WPARAM wParam, LPARAM lParam);
 };
-} 
+} // namespace RF

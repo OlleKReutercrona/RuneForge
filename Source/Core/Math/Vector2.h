@@ -16,7 +16,8 @@ class Vector2 {
 
 	// Constructors //
 
-	constexpr Vector2() noexcept : x(0), y(0) {}
+	constexpr Vector2() noexcept : x(0), y(0) {
+	}
 
 	constexpr Vector2(float X, float Y) noexcept : x(X), y(Y) {
 	}
