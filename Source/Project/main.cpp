@@ -10,5 +10,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, PSTR cmdline, i
 	cmdshow;
 
 	RF::WindowsApplication app;
-	return 	app.Run(hInstance, cmdshow);
+	return app.Run(hInstance, cmdshow);
 }

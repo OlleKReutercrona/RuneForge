@@ -8,6 +8,7 @@ namespace RF {
 		std::wstring title = L"RuneForge";
 		bool isFullScreen = false;
 		bool isResizable = true;
+		//Colour clearColour = { 0.2f, 0.4f, 0.6f, 1.0f };
 
 		HINSTANCE hInstance = nullptr;
 		int	cmdShow = 0;
