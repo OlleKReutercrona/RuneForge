@@ -1,0 +1,58 @@
+name: Format Check
+
+on:
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Required to diff PR base
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format-19
+          clang-format --version
+
+      - name: Get changed C++ files
+        id: format
+        shell: bash
+        run: |
+          set -e
+          
+          echo "🚀 Checking formatting"
+          
+          # Get files in PR
+          BASE=${{ github.event.pull_request.base.sha }}
+          HEAD=${{ github.event.pull_request.head.sha }}
+          
+          FILES=$(git diff --name-only --diff-filter=AM $BASE $HEAD | grep -E '\.(cpp|hpp|c|h)$' || true)
+
+          # Exclude Source/External/
+          FILES=$(echo "$FILES" | grep -Ev 'Source/External/' || true)
+          
+          if [ -z "$FILES" ]; then
+            echo "ℹ️  No C/C++ files found to format"
+            exit 0
+          fi
+
+          echo "📄 Files to check:"
+          echo "$FILES"
+
+          # Format Files
+          if ! git diff --name-only -z --diff-filter=AM $BASE $HEAD \
+              | grep -zE '\.(cpp|hpp|c|h)$' \
+              | grep -zEv 'External/' \
+              | xargs -0 -r clang-format --dry-run --Werror; then
+            echo ""
+            echo "❌ Formatting issues detected"
+            exit 1
+          fi
+
+          echo "✅ All files properly formatted"
+          exit 0
