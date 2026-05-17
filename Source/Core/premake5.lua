@@ -60,6 +60,8 @@ project(CORE_NAME)
         }
 
     links {
+        "d3d11",
+        "d3d12",
         "DXGI",
         "d3dcompiler",
     }
