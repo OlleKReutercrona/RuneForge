@@ -18,9 +18,7 @@ class Color {
 	Color() : r(0), g(0), b(0), a(1) {}
 	Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
 	Color(float r, float g, float b) : Color(r, g, b, 1.0f) {}
-	Color(const Color& color) : Color(color.r, color.g, color.b, color.a) { }
-	Color(const Vector3& v3) : Color(v3.x, v3.y, v3.z, 1.0f) {}
-	Color(const Vector4f& v4) : Color(v4.x, v4.y, v4.z, v4.w) {}
+	Color(const Color& color) : Color(color.r, color.g, color.b, color.a) {}
 	~Color() = default;
 
 	// Conversions //
