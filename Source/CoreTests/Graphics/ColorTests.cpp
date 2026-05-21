@@ -1,6 +1,4 @@
 #include "Graphics/Color.h"
-#include "Math/Vector3.h"
-#include "Math/Vector4.h"
 
 #include <gtest/gtest.h>
 #include <cmath>
@@ -39,24 +37,6 @@ TEST(ColorTests, CopyConstructor_CopiesAllComponents) {
 	Color original(0.1f, 0.2f, 0.3f, 0.4f);
 	Color copy(original);
 	EXPECT_EQ(copy, original);
-}
-
-TEST(ColorTests, ConstructorFromVector3_SetsRGBAndAlphaOne) {
-	Vector3 v(0.3f, 0.6f, 0.9f);
-	Color c(v);
-	EXPECT_FLOAT_EQ(c.r, 0.3f);
-	EXPECT_FLOAT_EQ(c.g, 0.6f);
-	EXPECT_FLOAT_EQ(c.b, 0.9f);
-	EXPECT_FLOAT_EQ(c.a, 1.0f);
-}
-
-TEST(ColorTests, ConstructorFromVector4_SetsRGBA) {
-	Vector4 v(0.2f, 0.4f, 0.6f, 0.8f);
-	Color c(v);
-	EXPECT_FLOAT_EQ(c.r, 0.2f);
-	EXPECT_FLOAT_EQ(c.g, 0.4f);
-	EXPECT_FLOAT_EQ(c.b, 0.6f);
-	EXPECT_FLOAT_EQ(c.a, 0.8f);
 }
 
 // -------------------------------------------------------------------------

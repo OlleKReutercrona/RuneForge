@@ -1,8 +1,7 @@
 #pragma once
-#include "Math/Vector3.h"
-#include "Math/Vector4.h"
 #include "Math/Math.h"
 
+#include <cassert>
 #include <array>
 
 namespace RF {	
@@ -227,8 +226,8 @@ inline const Color Color::Yellow = Color(1.0f, 1.0f, 0.0f, 1.0f);		// #FFFF00
 inline const Color Color::Gold = Color(1.0f, 0.8431f, 0.0f, 1.0f);		// #FFD700
 
 // Greens
-inline const Color Color::Green = Color(0.0f, 0.5020f, 0.0f, 1.0f);		// #008000
-inline const Color Color::Lime = Color(0.0f, 1.0f, 0.0f, 1.0f);			// #00FF00
+inline const Color Color::Green = Color(0.0f, 1.0f, 0.0f, 1.0f);		// #008000
+inline const Color Color::Lime = Color(0.0f, 0.502f, 0.0f, 1.0f);		// #00FF00
 inline const Color Color::DarkGreen = Color(0.0f, 0.3922f, 0.0f, 1.0f); // #006400
 inline const Color Color::Olive = Color(0.5020f, 0.5020f, 0.0f, 1.0f);	// #808000
 inline const Color Color::Teal = Color(0.0f, 0.5020f, 0.5020f, 1.0f);	// #008080
