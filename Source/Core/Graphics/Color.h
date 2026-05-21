@@ -20,6 +20,16 @@ class Color {
 	Color(const Color& color) : Color(color.r, color.g, color.b, color.a) {}
 	~Color() = default;
 
+	Color& operator=(const Color& rhs) {
+		if (this != &rhs) {
+			r = rhs.r;
+			g = rhs.g;
+			b = rhs.b;
+			a = rhs.a;
+		}
+		return *this;
+	}
+
 	// Conversions //
 
 	inline Color Linear() const {
