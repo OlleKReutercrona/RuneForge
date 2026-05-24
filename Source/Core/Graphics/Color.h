@@ -102,6 +102,7 @@ class Color {
 	}
 
 	friend Color operator/(Color a, float s) {
+		assert(s != 0.0f && "Division by zero in Color::operator/");
 		a /= s;
 		return a;
 	}

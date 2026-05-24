@@ -63,15 +63,13 @@ TEST(ColorTests, ToFloat4_ReturnsRGBA) {
 TEST(ColorTests, Linear_ConvertsGammaToLinearSpace) {
 	Color gamma(1.0f, 1.0f, 1.0f, 1.0f);
 	Color linear = gamma.Linear();
-	// GammaToLinearSpace(1.0f) = pow((1.0f + 0.055f) / 1.055f, 2.4f) = 1.0f
 	EXPECT_NEAR(linear.r, 1.0f, 1e-5f);
 	EXPECT_NEAR(linear.g, 1.0f, 1e-5f);
 	EXPECT_NEAR(linear.b, 1.0f, 1e-5f);
-	EXPECT_FLOAT_EQ(linear.a, 1.0f); // Alpha is unchanged
+	EXPECT_FLOAT_EQ(linear.a, 1.0f);
 }
 
 TEST(ColorTests, Linear_LowValueUsesLinearBranch) {
-	// Values <= 0.04045 use the linear branch: value / 12.92
 	Color c(0.04f, 0.04f, 0.04f, 0.5f);
 	Color linear = c.Linear();
 	EXPECT_NEAR(linear.r, 0.04f / 12.92f, 1e-5f);
