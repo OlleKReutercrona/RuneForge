@@ -187,7 +187,6 @@ inline const Color Color::LightGray = Color(0.8275f, 0.8275f, 0.8275f, 1.0f); //
 inline const Color Color::Gray = Color(0.5020f, 0.5020f, 0.5020f, 1.0f);	  // #808080
 inline const Color Color::DarkGray = Color(0.6627f, 0.6627f, 0.6627f, 1.0f);  // #A9A9A9
 inline const Color Color::Black = Color(0.0f, 0.0f, 0.0f, 1.0f);			  // #000000
-inline const Color Color::Clear = Color(0.0f, 0.0f, 0.0f, 0.0f);			  // #00000000
 
 // Reds
 inline const Color Color::Red = Color(1.0f, 0.0f, 0.0f, 1.0f);				// #FF0000

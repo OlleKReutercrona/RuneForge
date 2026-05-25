@@ -9,7 +9,7 @@ namespace RF {
 // Constructors
 // -------------------------------------------------------------------------
 
-TEST(ColorTests, DefaultConstructor_IsTransparentBlack) {
+TEST(ColorTests, DefaultConstructor_IsBlack) {
 	Color c;
 	EXPECT_FLOAT_EQ(c.r, 0.0f);
 	EXPECT_FLOAT_EQ(c.g, 0.0f);
@@ -199,10 +199,6 @@ TEST(ColorTests, Preset_White) {
 
 TEST(ColorTests, Preset_Black) {
 	EXPECT_EQ(Color::Black, Color(0.0f, 0.0f, 0.0f, 1.0f));
-}
-
-TEST(ColorTests, Preset_Clear_HasZeroAlpha) {
-	EXPECT_FLOAT_EQ(Color::Clear.a, 0.0f);
 }
 
 TEST(ColorTests, Preset_Red) {
