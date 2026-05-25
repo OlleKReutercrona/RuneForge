@@ -190,30 +190,6 @@ TEST(ColorTests, InequalityOperator_ReturnsFalseForIdenticalColors) {
 }
 
 // -------------------------------------------------------------------------
-// Indexing Operator
-// -------------------------------------------------------------------------
-
-TEST(ColorTests, IndexOperator_ReturnsCorrectComponents) {
-	Color c(0.1f, 0.2f, 0.3f, 0.4f);
-	EXPECT_FLOAT_EQ(c[0], 0.1f);
-	EXPECT_FLOAT_EQ(c[1], 0.2f);
-	EXPECT_FLOAT_EQ(c[2], 0.3f);
-	EXPECT_FLOAT_EQ(c[3], 0.4f);
-}
-
-TEST(ColorTests, IndexOperator_MutatesCorrectComponent) {
-	Color c(0.0f, 0.0f, 0.0f, 0.0f);
-	c[0] = 1.0f;
-	c[1] = 0.5f;
-	c[2] = 0.25f;
-	c[3] = 0.75f;
-	EXPECT_FLOAT_EQ(c.r, 1.0f);
-	EXPECT_FLOAT_EQ(c.g, 0.5f);
-	EXPECT_FLOAT_EQ(c.b, 0.25f);
-	EXPECT_FLOAT_EQ(c.a, 0.75f);
-}
-
-// -------------------------------------------------------------------------
 // Color Presets
 // -------------------------------------------------------------------------
 

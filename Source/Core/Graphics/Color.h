@@ -121,41 +121,6 @@ class Color {
 		return !(*this == rhs);
 	}
 
-	// Indexing operator //
-
-	float operator[](int index) const {
-		switch (index) {
-			case 0:
-				return r;
-			case 1:
-				return g;
-			case 2:
-				return b;
-			case 3:
-				return a;
-			default:
-				assert(false && "Invalid Color index!");
-				return 0.0f; // Return to silence compiler warning
-		}
-	}
-
-	float& operator[](int index) {
-		switch (index) {
-			case 0:
-				return r;
-			case 1:
-				return g;
-			case 2:
-				return b;
-			case 3:
-				return a;
-			default:
-				assert(false && "Invalid Color index!");
-				static float dummy = 0.0f; // Return reference to dummy to silence compiler warning
-				return dummy;
-		}
-	}
-
 	// Color Presets //
 
 	// Achromatic
