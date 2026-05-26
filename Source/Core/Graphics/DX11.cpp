@@ -1,13 +1,14 @@
 #include "stdafx.h"
 #include "DX11.h"
+
 #include <stdexcept>
 
 using namespace Microsoft::WRL;
 
 RF::DX11::DX11(const DX11CreationParams& params) :
 	mWidth(params.width),
-	mHeight(params.height) {
-	//mClearColour(params.clearColour) {
+	mHeight(params.height),
+	mClearColor(params.clearColor) {
 	if (FAILED(CreateDeviceAndSwapChain(params.hwnd, params.width, params.height)))
 		throw std::runtime_error("Failed to create Direct3D 11 device and swap chain.");
 
@@ -83,7 +84,6 @@ void RF::DX11::SetViewport(const uint32_t width, const uint32_t height) {
 }
 
 void RF::DX11::Render(const FrameData&) {
-	const FLOAT clearColor[] = { 0.2f, 0.4f, 0.6f, 1.0f };
-	mContext->ClearRenderTargetView(mDefaultTarget.Get(), clearColor);
+	mContext->ClearRenderTargetView(mDefaultTarget.Get(), mClearColor.ToFloat4().data());
 	mSwap->Present(1u, 0u);
 }

@@ -29,4 +29,19 @@ namespace math {
         return (result < 0.0f) ? result + TWO_PI : result;
     }
 
+    static inline float GammaToLinearSpace(float gamma) noexcept {
+		if (gamma <= 0.04045f) {
+			return gamma / 12.92f;
+		} else {
+			return std::pow((gamma + 0.055f) / 1.055f, 2.4f);
+		}
+	}
+
+	static inline float LinearToGammaSpace(float linear) noexcept {
+		if (linear <= 0.0031308f) {
+			return 12.92f * linear;
+		} else {
+			return 1.055f * std::pow(linear, 1.0f / 2.4f) - 0.055f;
+		}
+	}
 }

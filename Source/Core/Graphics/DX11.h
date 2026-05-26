@@ -1,5 +1,6 @@
 #pragma once
 #include "IRenderer.h"
+#include "Color.h"
 
 #include <wrl.h>
 #include <d3d11.h>
@@ -9,7 +10,7 @@ namespace RF {
 		HWND hwnd;
 		uint32_t width;
 		uint32_t height;
-		//Colour clearColour = { 0.2f, 0.4f, 0.6f, 1.0f };
+		Color clearColor = Color::Cornflower;
 		bool startInFullScreen = false;
 	};
 
@@ -30,7 +31,7 @@ namespace RF {
 
 		uint32_t mWidth;
 		uint32_t mHeight;
-		//Colour mClearColour;
+		Color mClearColor;
 
 		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mSwap;
